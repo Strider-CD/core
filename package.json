@@ -1,0 +1,27 @@
+{
+  "name": "@strider/core",
+  "version": "1.0.0",
+  "description": "Strider Core",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && node test | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Strider-CD/core.git"
+  },
+  "keywords": [
+    "Strider"
+  ],
+  "author": "Ilya Radchenko <ilya@burstcreations.com> (https://github.com/knownasilya)",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/Strider-CD/core/issues"
+  },
+  "homepage": "https://github.com/Strider-CD/core#readme",
+  "devDependencies": {
+    "standard": "^4.5.3",
+    "tap-spec": "^4.0.2",
+    "tape": "^4.0.0"
+  }
+}
