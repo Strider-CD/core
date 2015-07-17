@@ -9,6 +9,8 @@ server.connection({
   port: config.port
 })
 
+// Testing onPostAuth for protobuf transformation
+// we can remove this and hadle that after the fact.
 server.ext('onPostAuth', function (request, reply) {
   var payload = request.payload
 
