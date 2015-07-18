@@ -1,12 +1,22 @@
 'use strict'
 
 var Hapi = require('hapi')
+var Primus = require('primus')
 // var Joi = require('joi')
 var config = require('config')
 var server = new Hapi.Server()
 
 server.connection({
   port: config.port
+})
+
+var primus = Primus(server.listener, {})
+
+primus.on('connection', function (spark) {
+  spark.write('ping')
+  spark.on('data', function (data) {
+    console.log(data)
+  })
 })
 
 // Testing onPostAuth for protobuf transformation

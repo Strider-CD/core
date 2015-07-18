@@ -4,6 +4,7 @@
   "description": "Strider Core",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "standard && node test | tap-spec",
     "docs": "apidoc -i lib/ -o docs/"
   },
@@ -30,6 +31,8 @@
     "config": "^1.14.0",
     "hapi": "^8.8.0",
     "joi": "^6.5.0",
-    "json5": "^0.2.0"
+    "json5": "^0.2.0",
+    "primus": "^3.1.1",
+    "ws": "^0.7.2"
   }
 }
