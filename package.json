@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "config": "^1.14.0",
+    "bluebird": "^2.4.2",
     "hapi": "^8.8.0",
     "joi": "^6.5.0",
     "json5": "^0.2.0",
