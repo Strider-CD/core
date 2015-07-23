@@ -1,4 +1,5 @@
 {
   port: 8000,
-  apiVersion: 1
+  apiVersion: 1,
+  apiPrefix: '/api/v1/'
 }

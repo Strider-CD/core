@@ -13,5 +13,5 @@ exports.create = function (data) {
 }
 
 exports.checkIn = function (id, data) {
-  return Promise.resolve('ok')
+  return Promise.resolve({ droneId: id, onPostAuth: true, status: 'ready' })
 }
