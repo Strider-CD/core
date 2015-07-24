@@ -2,11 +2,14 @@
 // post on testing hapi https://medium.com/the-spumko-suite/testing-hapi-services-with-lab-96ac463c490a
 
 var tape = require('tape')
-var server = require('../')
+var server = require('../index.js')
+var config = require('config')
+
+var apiPrefix = config.apiPrefix
 
 tape('drones - list', function (t) {
   var options = {
-    url: '/api/drones',
+    url: apiPrefix + 'drones',
     method: 'GET'
   }
 
@@ -22,7 +25,7 @@ tape('drones - list', function (t) {
 
 tape('drone - checkin', function (t) {
   var options = {
-    url: '/api/drones/1/checkin',
+    url: apiPrefix + 'drones/1/checkin',
     method: 'PUT',
     payload: {
       status: 'ready'
