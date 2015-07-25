@@ -4,8 +4,8 @@
   "description": "Strider Core",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "snazzy; node test | tap-spec",
+    "start": "./run.sh",
+    "test": "snazzy; ./run-tests.sh",
     "docs": "apidoc -i lib/ -o docs/"
   },
   "repository": {

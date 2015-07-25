@@ -20,7 +20,7 @@ primus.on('connection', function (spark) {
   })
 })
 
-server.route(apiRoutes(config))
+server.route(apiRoutes())
 
 if (!module.parent) {
   server.start(function (err) {

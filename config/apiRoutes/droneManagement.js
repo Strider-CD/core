@@ -1,15 +1,17 @@
 var Joi = require('joi')
 var config = require('config')
+var senecaForwarder = require('../../lib/senecaForwarder.js')
 
 module.exports = function () {
-  var Drone = require('../../models/drone')
+  var forwarder = senecaForwarder.bind(undefined, 'drones')
   return [{
     path: config.apiPrefix + 'drones',
     method: 'GET',
     handler: function (request, reply) {
-      reply([
-        'drone1'
-      ])
+      forwarder('get', {}, function (err, results) {
+        if (err) reply('').code(503) // Service Unavailable
+        else reply(results)
+      })
     }
   }, {
     path: config.apiPrefix + 'drones',
@@ -22,8 +24,10 @@ module.exports = function () {
       }
     },
     handler: function (request, reply) {
-      Drone.create(request.payload)
-        .then(reply)
+      forwarder('register', request.payload, function (err, results) {
+        if (err) reply('').code(503) // Service Unavailable
+        else reply(results)
+      })
     }
   }, {
     path: config.apiPrefix + 'drones/{id}/checkin',
@@ -31,9 +35,10 @@ module.exports = function () {
     handler: function (request, reply) {
       var id = request.params.id
       var payload = request.payload
-
-      Drone.checkIn(id, payload)
-        .then(reply)
+      forwarder('checkin', {id: id, data: payload}, function (err, results) {
+        if (err) reply('').code(503) // Service Unavailable
+        else reply(results)
+      })
     }
   }]
 }
