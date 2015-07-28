@@ -4,7 +4,7 @@ var Hapi = require('hapi')
 var Primus = require('primus')
 var config = require('config')
 var logger = require('./lib/log.js')(module)
-var apiRoutes = require('./config/apiRoutes')
+var apiRoutes = require('./lib/routes/api')
 var server = new Hapi.Server()
 
 server.connection({
