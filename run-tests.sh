@@ -8,4 +8,10 @@ else
 fi
 MICROSERVICES_PID=$!
 trap 'kill $MICROSERVICES_PID' EXIT
-node test ${LOG} | tap-spec
+RETVAL=0
+for file in `ls test/*.js`; do 
+    node $file ${LOG} | tap-spec
+    VAL=$?
+    RETVAL=$(($RETVAL+$VAL))
+done
+exit $RETVAL
