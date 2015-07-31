@@ -58,7 +58,7 @@ tape('drones - list after register', function (t) {
   })
 })
 
-tape('drone - checkin', function (t) {
+tape('drones - checkin', function (t) {
   var options = {
     url: apiPrefix + 'drones/' + droneId + '/checkin',
     method: 'PUT',
