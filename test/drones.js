@@ -4,11 +4,15 @@
 var tape = require('tape')
 var server = require('../index.js')
 var config = require('config')
+var Drone = require('../lib/models/drone.js').Drone
 
 var apiPrefix = config.apiPrefix
 var droneId = 1
 
 tape('drones - list before register', function (t) {
+  // clean drone collection
+  Drone.collection().purge()
+
   var options = {
     url: apiPrefix + 'drones',
     method: 'GET'
@@ -34,10 +38,10 @@ tape('drones - register', function (t) {
   }
 
   server.inject(options, function (res) {
-    var data = res.result
-    droneId = data.id
+    var id = res.result
+    droneId = id
     t.equal(res.statusCode, 200)
-    t.same(data.name, options.payload.name, 'Drone ready')
+    t.ok(id, typeof id === 'string', 'Drone ready')
     t.end()
   })
 })
