@@ -4,8 +4,8 @@
   "description": "Strider Core",
   "main": "index.js",
   "scripts": {
-    "start": "./run.sh",
-    "test": "snazzy; ./run-tests.sh",
+    "start": "node node_modules/traceur-runner/bin/traceur-runner.js index.js server",
+    "test": "snazzy; ./node_modules/traceur-runner/bin/traceur-runner.js ./node_modules/tape/bin/tape test/*.js | tap-spec",
     "docs": "apidoc -i lib/ -o docs/"
   },
   "repository": {
@@ -28,16 +28,29 @@
     "tape": "^4.0.0"
   },
   "dependencies": {
+    "babel-eslint": "^4.0.10",
     "bluebird": "^2.4.2",
     "config": "^1.14.0",
+    "eventemitter3": "^1.1.1",
     "github": "^0.2.4",
     "hapi": "^8.8.0",
     "joi": "^6.5.0",
     "json5": "^0.2.0",
+    "lodash": "^3.10.1",
+    "lokijs": "^1.3.8",
+    "node-uuid": "^1.4.3",
     "primus": "^3.1.1",
+    "rwlock": "^5.0.0",
     "seneca": "^0.6.3",
+    "standard": "^5.1.0",
     "string": "^3.3.0",
+    "traceur": "0.0.91",
+    "traceur-runner": "^2.0.1",
+    "tv4": "^1.2.3",
     "winston": "^1.0.1",
     "ws": "^0.7.2"
+  },
+  "standard": {
+          "parser": "babel-eslint"
   }
 }

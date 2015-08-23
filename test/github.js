@@ -4,9 +4,13 @@
 var tape = require('tape')
 var server = require('../index.js')
 var config = require('config')
+var Job = require('../lib/models/job.js').Job
 var pull_request = require('./fixtures/github/pull_request.js')
 
 var apiPrefix = config.apiPrefix
+// clean job collection
+Job.collection().purge()
+
 tape('githubEndpoint - handleWebhook - receive pull request', function (t) {
   var options = {
     url: apiPrefix + 'github',
