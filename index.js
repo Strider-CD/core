@@ -8,7 +8,7 @@ var config = require('config')
 var EventEmitter = require('eventemitter3')
 var logger = require('./lib/log')(module)
 var apiRoutes = require('./lib/routes/api')
-var eventHandlers = require('./lib/eventHandlers')
+var eventHandlers = require('./lib/event-handlers')
 var server = new Hapi.Server()
 
 server.connection({
