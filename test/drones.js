@@ -4,9 +4,9 @@
 require('babel/register')
 
 var tape = require('tape')
-var server = require('../index.js')
+var server = require('../index')
 var config = require('config')
-var Drone = require('../lib/models/drone.js').Drone
+var Drone = require('../lib/models/drone').Drone
 
 var apiPrefix = config.apiPrefix
 var droneId = 1

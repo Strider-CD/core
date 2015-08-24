@@ -4,10 +4,10 @@
 require('babel/register')
 
 var tape = require('tape')
-var server = require('../index.js')
+var server = require('../index')
 var config = require('config')
-var Job = require('../lib/models/job.js').Job
-var pull_request = require('./fixtures/github/pull_request.js')
+var Job = require('../lib/models/job').Job
+var pull_request = require('./fixtures/github/pull_request')
 
 var apiPrefix = config.apiPrefix
 // clean job collection
