@@ -1,5 +1,7 @@
 'use strict'
 
+require('babel/register')
+
 var Hapi = require('hapi')
 var Primus = require('primus')
 var config = require('config')
@@ -25,7 +27,8 @@ primus.on('connection', function (spark) {
 })
 
 server.route(apiRoutes(emitter))
-if (process.argv[2] === 'server') {
+
+if (!module.parent) {
   server.start(function (err) {
     if (err) {
       return console.error(err)
