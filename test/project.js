@@ -6,13 +6,13 @@ require('babel/register')
 var tape = require('tape')
 var server = require('../index')
 var config = require('config')
-var Project = require('../lib/models/project').Project
+var Project = require('../lib/models/project')
 
 var apiPrefix = config.apiPrefix
 
 tape('projects - list', function (t) {
   // clean drone collection
-  Project.collection().purge()
+  Project.purge()
 
   var options = {
     url: apiPrefix + 'projects',

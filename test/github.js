@@ -6,12 +6,12 @@ require('babel/register')
 var tape = require('tape')
 var server = require('../index')
 var config = require('config')
-var Job = require('../lib/models/job').Job
+var Job = require('../lib/models/job')
 var pull_request = require('./fixtures/github/pull_request')
 
 var apiPrefix = config.apiPrefix
 // clean job collection
-Job.collection().purge()
+Job.purge()
 
 tape('githubEndpoint - handleWebhook - receive pull request', function (t) {
   var options = {

@@ -6,14 +6,14 @@ require('babel/register')
 var tape = require('tape')
 var server = require('../index')
 var config = require('config')
-var Drone = require('../lib/models/drone').Drone
+var Drone = require('../lib/models/drone')
 
 var apiPrefix = config.apiPrefix
 var droneId = 1
 
 tape('drones - list before register', function (t) {
   // clean drone collection
-  Drone.collection().purge()
+  Drone.purge()
 
   var options = {
     url: apiPrefix + 'drones',

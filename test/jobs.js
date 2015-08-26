@@ -6,7 +6,7 @@ require('babel/register')
 var tape = require('tape')
 var server = require('../index')
 var config = require('config')
-var Job = require('../lib/models/job').Job
+var Job = require('../lib/models/job')
 var pull_request = require('./fixtures/github/pull_request')
 
 var apiPrefix = config.apiPrefix
@@ -14,7 +14,7 @@ var retrievedJob = null
 
 tape('job - database should be empty', function (t) {
   // clean job collection
-  Job.collection().purge()
+  Job.purge()
 
   var options = {
     url: apiPrefix + 'jobs',
@@ -71,7 +71,7 @@ tape('job - get a job from the queue', function (t) {
     var data = res.result
     retrievedJob = data // for the update test
     t.equal(res.statusCode, 200)
-    t.ok(Job.collection()._validate(data), 'job conforms to schema')
+    t.ok(Job._validate(data), 'job conforms to schema')
     t.ok(data.status && data.status === 'running', 'job is now marked as running')
     t.ok(data.id && (typeof data.id === 'string') && data.id.length > 5, 'job has id')
     t.end()
@@ -86,7 +86,7 @@ tape('job - try to get a second job from the queue', function (t) {
   server.inject(options, function (res) {
     var data = res.result
     t.equal(res.statusCode, 503) // resource temporarly not avaiable
-    t.ok(!Job.collection()._validate(data), 'job does not conform to schema')
+    t.ok(!Job._validate(data), 'job does not conform to schema')
     t.end()
   })
 })
