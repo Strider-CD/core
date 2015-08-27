@@ -35,6 +35,7 @@ tape('drones - register', function (t) {
     url: apiPrefix + 'drones',
     method: 'POST',
     payload: {
+      id: '1',
       name: 'drone1'
     }
   }

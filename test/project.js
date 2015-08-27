@@ -28,3 +28,23 @@ tape('projects - list', function (t) {
     t.end()
   })
 })
+
+tape('projects - create', function (t) {
+  var options = {
+    url: apiPrefix + 'projects',
+    method: 'POST',
+    payload: {
+      provider: {
+        type: 'github'
+      }
+    }
+  }
+
+  server.inject(options, function (res) {
+    var id = res.result
+
+    t.equal(res.statusCode, 200)
+    t.ok(id, typeof id === 'string', 'Project ready')
+    t.end()
+  })
+})

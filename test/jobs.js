@@ -37,6 +37,7 @@ tape('job - creating a job by injecting a pull request through a github webhook'
     },
     payload: JSON.stringify(pull_request)
   }
+
   server.inject(options, function (res) {
     var data = res.result
     t.equal(res.statusCode, 200)
@@ -53,6 +54,7 @@ tape('job - check list of jobs', function (t) {
     url: apiPrefix + 'jobs',
     method: 'GET'
   }
+
   server.inject(options, function (res) {
     var data = res.result
     t.equal(res.statusCode, 200)
@@ -71,7 +73,7 @@ tape('job - get a job from the queue', function (t) {
     var data = res.result
     retrievedJob = data // for the update test
     t.equal(res.statusCode, 200)
-    t.ok(Job._validate(data), 'job conforms to schema')
+    t.ok(Job.validate(data), 'job conforms to schema')
     t.ok(data.status && data.status === 'running', 'job is now marked as running')
     t.ok(data.id && (typeof data.id === 'string') && data.id.length > 5, 'job has id')
     t.end()
@@ -83,10 +85,12 @@ tape('job - try to get a second job from the queue', function (t) {
     url: apiPrefix + 'jobs/retrieve',
     method: 'GET'
   }
+
   server.inject(options, function (res) {
     var data = res.result
+
     t.equal(res.statusCode, 503) // resource temporarly not avaiable
-    t.ok(!Job._validate(data), 'job does not conform to schema')
+    t.ok(!!Job.validate(data).error, 'job does not conform to schema')
     t.end()
   })
 })
