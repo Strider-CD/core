@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "snazzy; tape test/*.js | tap-spec",
+    "lint": "snazzy",
+    "test": "tape test/*.js | tap-spec",
+    "posttest": "npm run lint",
     "test-coverage": "istanbul cover test/*.js --report lcovonly | tap-spec",
     "docs": "apidoc -i lib/ -o docs/"
   },
