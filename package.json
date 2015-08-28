@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node node_modules/traceur-runner/bin/traceur-runner.js index.js server",
-    "test": "snazzy; ./node_modules/traceur-runner/bin/traceur-runner.js ./node_modules/tape/bin/tape test/*.js | tap-spec",
+    "test": "./node_modules/traceur-runner/bin/traceur-runner.js ./node_modules/tape/bin/tape test/*.js | tap-spec",
     "docs": "apidoc -i lib/ -o docs/"
   },
   "repository": {
@@ -48,6 +48,7 @@
     "traceur": "0.0.91",
     "traceur-runner": "^2.0.1",
     "tv4": "^1.2.3",
+    "validator": "^4.0.5",
     "winston": "^1.0.1",
     "ws": "^0.7.2"
   },
