@@ -1,6 +1,6 @@
 # core
 
-Strider Core - API connecting drones and providing an in for user plugins.
+Strider Core - API connecting projects and drones for continuous integration/deployment
 
 [![Build Status](https://travis-ci.org/Strider-CD/core.svg)](https://travis-ci.org/Strider-CD/core)
 [![Code Climate](https://codeclimate.com/github/Strider-CD/core/badges/gpa.svg)](https://codeclimate.com/github/Strider-CD/core)
