@@ -48,3 +48,20 @@ tape('projects - create', function (t) {
     t.end()
   })
 })
+
+tape('projects - webhook github', function (t) {
+  var options = {
+    url: apiPrefix + 'projects/webhooks/github',
+    method: 'POST',
+    payload: {
+    }
+  }
+
+  server.inject(options, function (res) {
+    var id = res.result
+
+    t.equal(res.statusCode, 200)
+    t.equal(id, 'github', 'Webhook ready')
+    t.end()
+  })
+})
