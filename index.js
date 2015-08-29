@@ -1,6 +1,8 @@
 'use strict'
 
-require('babel/register')
+require('babel/register')({
+  optional: ['es7.decorators', 'es7.objectRestSpread']
+})
 
 var Hapi = require('hapi')
 var Primus = require('primus')
