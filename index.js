@@ -14,9 +14,6 @@ server.connection({
   port: config.port
 })
 
-var emitter = new EventEmitter()
-eventHandlers(emitter)
-
 var primus = Primus(server.listener, {})
 primus.use('rooms', Rooms)
 primus.on('connection', function (spark) {
@@ -51,6 +48,13 @@ primus.on('connection', function (spark) {
       }
     }
   })
+})
+
+var emitter = new EventEmitter()
+eventHandlers(emitter, primus)
+
+primus.save(__dirname +'/primus.js', function(err,res) {
+  console.log(err, res)
 })
 
 server.route(apiRoutes(emitter))
