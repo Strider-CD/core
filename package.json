@@ -42,7 +42,7 @@
     "eventemitter3": "^1.1.1",
     "github": "^0.2.4",
     "hapi": "^8.8.0",
-    "hapi-decorators": "^0.2.0",
+    "hapi-decorators": "^0.2.1",
     "joi": "^6.5.0",
     "json5": "^0.2.0",
     "lodash": "^3.10.1",
