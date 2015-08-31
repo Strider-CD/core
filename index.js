@@ -9,7 +9,7 @@ var Primus = require('primus')
 var config = require('config')
 var EventEmitter = require('eventemitter3')
 var logger = require('./lib/log')(module)
-var apiRoutes = require('./lib/routes/api')
+var routes = require('./lib/routes')
 var eventHandlers = require('./lib/event-handlers')
 var server = new Hapi.Server()
 
@@ -34,7 +34,7 @@ server.on('response', function (request) {
   console.log(`${request.info.remoteAddress}: ${request.method.toUpperCase()} ${request.url.path} --> ${request.response.statusCode}`)
 })
 
-server.route(apiRoutes(emitter))
+server.route(routes(emitter))
 
 if (!module.parent) {
   server.start(function (err) {
