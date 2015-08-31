@@ -6,3 +6,6 @@ ratings:
   paths:
   - "lib/**.js"
   - "test/**.js"
+
+exclude_paths:
+  - "test/fixtures"
