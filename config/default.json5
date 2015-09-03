@@ -1,5 +1,12 @@
 {
   port: 8000,
+  baseUrl: 'localhost:8000',
   apiVersion: 1,
-  apiPrefix: '/api/v1/'
+  apiPrefix: '/api/v1/',
+
+  github: {
+    apiServer: 'api.github.com',
+    key: '',
+    secret: ''
+  }
 }

@@ -1,12 +1,16 @@
 'use strict'
 
+require('babel/register')({
+  optional: ['es7.decorators', 'es7.objectRestSpread']
+})
+
 var Hapi = require('hapi')
 var Primus = require('primus')
 var config = require('config')
 var EventEmitter = require('eventemitter3')
-var logger = require('./lib/util/log.js')(module)
-var apiRoutes = require('./lib/routes/api')
-var eventHandlers = require('./lib/eventHandlers')
+var logger = require('./lib/util/log')(module)
+var routes = require('./lib/routes')
+var eventHandlers = require('./lib/event-handlers')
 var server = new Hapi.Server()
 var Rooms = require('primus-rooms')
 
@@ -34,7 +38,7 @@ primus.on('connection', function (spark) {
           spark.room(room).write(message)
         }
       } else {
-        if (data.action == 'leave') {
+        if (data.action === 'leave') {
           spark.leave(room)
           return
         }
@@ -53,12 +57,15 @@ primus.on('connection', function (spark) {
 var emitter = new EventEmitter()
 eventHandlers(emitter, primus)
 
-primus.save(__dirname +'/primus.js', function(err,res) {
-  console.log(err, res)
+// Super simple logging
+// TODO: add something more inteligent, maybe using `good` module
+server.on('response', function (request) {
+  console.log(request.info.remoteAddress + ' : ' + request.method.toUpperCase() + ' ' + request.url.path + ' --> ' + request.response.statusCode)
 })
 
-server.route(apiRoutes(emitter))
-if (process.argv[2] === 'server') {
+server.route(routes(emitter))
+
+if (!module.parent) {
   server.start(function (err) {
     if (err) {
       return console.error(err)

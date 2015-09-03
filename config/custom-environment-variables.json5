@@ -1,3 +1,10 @@
 {
-  port: 'PORT'
+  port: 'PORT',
+  baseUrl: 'STRIDER_URL_BASE',
+
+  github: {
+    apiServer: 'STRIDER_GITHUB_API_SERVER',
+    key: 'STRIDER_GITHUB_KEY',
+    secret: 'STRIDER_GITHUB_SECRET'
+  }
 }

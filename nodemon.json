@@ -1,6 +1,0 @@
-{
-    "execMap": {
-        "js": "./node_modules/traceur-runner/bin/traceur-runner.js"
-    },
-    "ext": "js json html css"
-}

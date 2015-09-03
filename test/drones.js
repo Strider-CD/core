@@ -1,17 +1,19 @@
 'use strict'
 // post on testing hapi https://medium.com/the-spumko-suite/testing-hapi-services-with-lab-96ac463c490a
 
+require('babel/register')
+
 var tape = require('tape')
-var server = require('../index.js')
+var server = require('../index')
 var config = require('config')
-var Drone = require('../lib/models/drone.js').Drone
+var Drone = require('../lib/models/drone')
 
 var apiPrefix = config.apiPrefix
 var droneId = 1
 
 tape('drones - list before register', function (t) {
   // clean drone collection
-  Drone.collection().purge()
+  Drone.purge()
 
   var options = {
     url: apiPrefix + 'drones',
@@ -33,6 +35,7 @@ tape('drones - register', function (t) {
     url: apiPrefix + 'drones',
     method: 'POST',
     payload: {
+      id: '1',
       name: 'drone1'
     }
   }
