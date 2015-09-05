@@ -11,7 +11,13 @@ var EventEmitter = require('eventemitter3')
 var logger = require('./lib/util/log')(module)
 var routes = require('./lib/routes')
 var eventHandlers = require('./lib/event-handlers')
-var server = new Hapi.Server()
+var server = new Hapi.Server({
+  connections: {
+    routes: {
+      cors: true
+    }
+  }
+})
 var Rooms = require('primus-rooms')
 
 server.connection({
