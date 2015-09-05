@@ -7,10 +7,12 @@ var tape = require('tape')
 var server = require('../index')
 var config = require('config')
 var Job = require('../lib/models/job')
+var v = require('validator')
 var pull_request = require('./fixtures/github/pull_request')
 
 var apiPrefix = config.apiPrefix
 var retrievedJob = null
+var createdProjectId = ''
 
 tape('job - database should be empty', function (t) {
   // clean job collection
@@ -28,20 +30,40 @@ tape('job - database should be empty', function (t) {
   })
 })
 
-tape('job - creating a job by injecting a pull request through a github webhook', function (t) {
+tape('job - create project in order to inject a github pull_request', function (t) {
   var options = {
-    url: apiPrefix + 'github',
+    url: apiPrefix + 'projects',
+    method: 'POST',
+    payload: {
+      provider: {
+        type: 'github'
+      }
+    }
+  }
+
+  server.inject(options, function (res) {
+    createdProjectId = res.result
+
+    t.equal(res.statusCode, 200)
+    t.ok(createdProjectId,
+      typeof createdProjectId === 'string' && v.isUUID(createdProjectId),
+      'Project ready')
+    t.end()
+  })
+})
+
+tape('projects - create a job through a project webhook (github)', function (t) {
+  var options = {
+    url: apiPrefix + `projects/${createdProjectId}/webhooks/github`,
     method: 'POST',
     headers: {
       'X-Github-Event': 'pull_request'
     },
     payload: JSON.stringify(pull_request)
   }
-
   server.inject(options, function (res) {
-    var data = res.result
     t.equal(res.statusCode, 200)
-    t.ok(data === null, 'empty response as expected')
+    t.equal(res.result, null, 'Webhook ready')
     t.end()
   })
 })
@@ -110,9 +132,9 @@ tape('job - check list of jobs again', function (t) {
   })
 })
 
-tape('job - creating a second job by injecting a pull request through a github webhook', function (t) {
+tape('projects - create a second job through a project webhook (github)', function (t) {
   var options = {
-    url: apiPrefix + 'github',
+    url: apiPrefix + `projects/${createdProjectId}/webhooks/github`,
     method: 'POST',
     headers: {
       'X-Github-Event': 'pull_request'
@@ -120,9 +142,8 @@ tape('job - creating a second job by injecting a pull request through a github w
     payload: JSON.stringify(pull_request)
   }
   server.inject(options, function (res) {
-    var data = res.result
     t.equal(res.statusCode, 200)
-    t.ok(data === null, 'empty response as expected')
+    t.equal(res.result, null, 'Webhook ready')
     t.end()
   })
 })
