@@ -13,6 +13,7 @@ var pull_request = require('./fixtures/github/pull_request')
 var apiPrefix = config.apiPrefix
 var retrievedJob = null
 var createdProjectId = ''
+var timeBeforeJobSubmit
 
 tape('job - database should be empty', function (t) {
   // clean job collection
@@ -35,6 +36,7 @@ tape('job - create project in order to inject a github pull_request', function (
     url: apiPrefix + 'projects',
     method: 'POST',
     payload: {
+      name: 'test-project',
       provider: {
         type: 'github'
       }
@@ -61,6 +63,7 @@ tape('projects - create a job through a project webhook (github)', function (t) 
     },
     payload: JSON.stringify(pull_request)
   }
+  timeBeforeJobSubmit = new Date().getTime()
   server.inject(options, function (res) {
     t.equal(res.statusCode, 200)
     t.equal(res.result, null, 'Webhook ready')
@@ -82,6 +85,34 @@ tape('job - check list of jobs', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data.length > 0, 'job present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')
+    t.end()
+  })
+})
+
+tape('job - find jobs created before the first job got submitted', function (t) {
+  var options = {
+    url: `${apiPrefix}jobs/receivedAt/lt/${timeBeforeJobSubmit}`,
+    method: 'GET'
+  }
+
+  server.inject(options, function (res) {
+    var data = res.result
+    t.equal(res.statusCode, 200)
+    t.ok(data.length === 0, 'no job was created before')
+    t.end()
+  })
+})
+
+tape('job - find jobs after first job was submitted', function (t) {
+  var options = {
+    url: `${apiPrefix}jobs/receivedAt/gte/${timeBeforeJobSubmit}`,
+    method: 'GET'
+  }
+
+  server.inject(options, function (res) {
+    var data = res.result
+    t.equal(res.statusCode, 200)
+    t.ok(data.length === 1 && (data[0].receivedAt >= timeBeforeJobSubmit), 'one job was created after')
     t.end()
   })
 })
