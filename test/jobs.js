@@ -196,8 +196,15 @@ tape('job - find only received jobs', function (t) {
 })
 
 tape('job - update job', function (t) {
-  retrievedJob.stdout = 'did\nmy\nwork\n'
-  retrievedJob.stderr = 'one\nerror\n'
+  retrievedJob.stdout = {
+    1: 'did',
+    2: 'my',
+    3: 'work'
+  }
+  retrievedJob.stderr = {
+    4: 'one',
+    5: 'error'
+  }
   retrievedJob.status = 'finished'
   retrievedJob.result = 'success'
 

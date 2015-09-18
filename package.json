@@ -50,6 +50,7 @@
     "node-uuid": "^1.4.3",
     "primus": "^3.1.1",
     "primus-rooms": "^3.3.0",
+    "redtape": "^1.0.0",
     "rwlock": "^5.0.0",
     "string": "^3.3.0",
     "validator": "^4.0.5",
