@@ -17,13 +17,39 @@ var timeBeforeJobSubmit
 // clean job collection
 Job.purge()
 
+var token = null
+
+var basicHeader = function (username, password) {
+  return 'Basic ' + (new Buffer(username + ':' + password, 'utf8')).toString('base64')
+}
+
+tape('project - login with admin', function (t) {
+  var options = {
+    url: apiPrefix + 'users/login',
+    method: 'GET',
+    headers: {
+      authorization: basicHeader(config.adminUser, config.adminPwd)
+    }
+  }
+
+  server.inject(options, function (res) {
+    token = res.headers.authorization
+    t.ok(token && token.length > 10, 'Got token')
+    t.equal(res.statusCode, 200)
+    t.end()
+  })
+})
+
 tape('projects - list', function (t) {
   // clean drone collection
   Project.purge()
 
   var options = {
     url: apiPrefix + 'projects',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -45,6 +71,9 @@ tape('projects - create', function (t) {
       provider: {
         type: 'github'
       }
+    },
+    headers: {
+      authorization: token
     }
   }
 
@@ -79,7 +108,10 @@ tape('projects - webhook github', function (t) {
 tape('project - check list of jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -94,7 +126,10 @@ tape('project - check list of jobs', function (t) {
 tape('projects - find jobs created before the first job got submitted', function (t) {
   var options = {
     url: `${apiPrefix}projects/${createdProjectId}/jobs/receivedAt/lt/${timeBeforeJobSubmit}`,
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -108,7 +143,10 @@ tape('projects - find jobs created before the first job got submitted', function
 tape('projects - find jobs after first job was submitted', function (t) {
   var options = {
     url: `${apiPrefix}projects/${createdProjectId}/jobs/receivedAt/gte/${timeBeforeJobSubmit}`,
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -124,6 +162,9 @@ tape('projects - webhook gitlab', function (t) {
     url: apiPrefix + `projects/${createdProjectId}/webhooks/gitlab`,
     method: 'POST',
     payload: {
+    },
+    headers: {
+      authorization: token
     }
   }
 
@@ -139,6 +180,9 @@ tape('projects - webhook bitbucket', function (t) {
     url: apiPrefix + `projects/${createdProjectId}/webhooks/bitbucket`,
     method: 'POST',
     payload: {
+    },
+    headers: {
+      authorization: token
     }
   }
 
@@ -154,6 +198,9 @@ tape('projects - webhook rest', function (t) {
     url: apiPrefix + `projects/${createdProjectId}/webhooks/rest`,
     method: 'POST',
     payload: {
+    },
+    headers: {
+      authorization: token
     }
   }
 
