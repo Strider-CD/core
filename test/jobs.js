@@ -15,13 +15,39 @@ var retrievedJob = null
 var createdProjectId = ''
 var timeBeforeJobSubmit
 
+var token = null
+
+var basicHeader = function (username, password) {
+  return 'Basic ' + (new Buffer(username + ':' + password, 'utf8')).toString('base64')
+}
+
+tape('job - login with admin', function (t) {
+  var options = {
+    url: apiPrefix + 'users/login',
+    method: 'GET',
+    headers: {
+      authorization: basicHeader(config.adminUser, config.adminPwd)
+    }
+  }
+
+  server.inject(options, function (res) {
+    token = res.headers.authorization
+    t.ok(token && token.length > 10, 'Got token')
+    t.equal(res.statusCode, 200)
+    t.end()
+  })
+})
+
 tape('job - database should be empty', function (t) {
   // clean job collection
   Job.purge()
 
   var options = {
     url: apiPrefix + 'jobs',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
   server.inject(options, function (res) {
     var data = res.result
@@ -40,6 +66,9 @@ tape('job - create project in order to inject a github pull_request', function (
       provider: {
         type: 'github'
       }
+    },
+    headers: {
+      authorization: token
     }
   }
 
@@ -58,6 +87,7 @@ tape('projects - create a job through a project webhook (github)', function (t) 
   var options = {
     url: apiPrefix + `projects/${createdProjectId}/webhooks/github`,
     method: 'POST',
+    // not that we do not authenticate github
     headers: {
       'X-Github-Event': 'pull_request'
     },
@@ -77,7 +107,10 @@ tape('projects - create a job through a project webhook (github)', function (t) 
 tape('job - check list of jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -92,7 +125,10 @@ tape('job - check list of jobs', function (t) {
 tape('job - find jobs created before the first job got submitted', function (t) {
   var options = {
     url: `${apiPrefix}jobs/receivedAt/lt/${timeBeforeJobSubmit}`,
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -106,7 +142,10 @@ tape('job - find jobs created before the first job got submitted', function (t) 
 tape('job - find jobs after first job was submitted', function (t) {
   var options = {
     url: `${apiPrefix}jobs/receivedAt/gte/${timeBeforeJobSubmit}`,
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -120,7 +159,10 @@ tape('job - find jobs after first job was submitted', function (t) {
 tape('job - get a job from the queue', function (t) {
   var options = {
     url: apiPrefix + 'jobs/retrieve',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
   server.inject(options, function (res) {
     var data = res.result
@@ -136,7 +178,10 @@ tape('job - get a job from the queue', function (t) {
 tape('job - try to get a second job from the queue', function (t) {
   var options = {
     url: apiPrefix + 'jobs/retrieve',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -151,7 +196,10 @@ tape('job - try to get a second job from the queue', function (t) {
 tape('job - check list of jobs again', function (t) {
   var options = {
     url: apiPrefix + 'jobs',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
   server.inject(options, function (res) {
     var data = res.result
@@ -183,7 +231,10 @@ tape('job - find only received jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs/status/received',
     method: 'GET',
-    payload: JSON.stringify({'status': 'received'})
+    payload: JSON.stringify({'status': 'received'}),
+    headers: {
+      authorization: token
+    }
   }
   server.inject(options, function (res) {
     var data = res.result
@@ -211,7 +262,10 @@ tape('job - update job', function (t) {
   var options = {
     url: apiPrefix + 'jobs/id/' + retrievedJob.id,
     method: 'PUT',
-    payload: JSON.stringify(retrievedJob)
+    payload: JSON.stringify(retrievedJob),
+    headers: {
+      authorization: token
+    }
   }
 
   server.inject(options, function (res) {
@@ -225,7 +279,10 @@ tape('job - update job', function (t) {
 tape('job - find only finished jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs/status/finished',
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
   }
   server.inject(options, function (res) {
     var data = res.result
