@@ -88,6 +88,25 @@ tape('projects - create', function (t) {
   })
 })
 
+tape('projects - check list of projects after create', function (t) {
+  var options = {
+    url: apiPrefix + 'projects',
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
+  }
+
+  server.inject(options, function (res) {
+    console.log('project', res.result)
+    var data = res.result
+    t.equal(res.statusCode, 200)
+    t.ok(data.length > 0, 'project present')
+    t.ok(data[0].id && typeof data[0].id === 'string', 'project has id')
+    t.end()
+  })
+})
+
 tape('projects - webhook github', function (t) {
   var options = {
     url: apiPrefix + `projects/${createdProjectId}/webhooks/github`,
