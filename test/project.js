@@ -98,7 +98,6 @@ tape('projects - check list of projects after create', function (t) {
   }
 
   server.inject(options, function (res) {
-    console.log('project', res.result)
     var data = res.result
     t.equal(res.statusCode, 200)
     t.ok(data.length > 0, 'project present')

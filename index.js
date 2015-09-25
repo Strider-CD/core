@@ -29,6 +29,7 @@ server.connection({
 })
 
 var primus = new PrimusHandler(server)
+primus.authorize(auth.primusJwtAuth)
 server.primus = primus
 
 var emitter = new EventEmitter()
@@ -55,7 +56,7 @@ server.register(hapiPlugins, function (err) {
       validateFunc: auth.jwtAuth,
       verifyOptions: { algorithms: [ 'HS256' ] }
     })
-  //server.auth.default('jwtAuth')
+  server.auth.default('jwtAuth')
   server.route(routes(emitter))
 })
 setUpAdminUser()
