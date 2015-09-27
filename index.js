@@ -16,6 +16,8 @@ var routes = require('./lib/routes')
 var eventHandlers = require('./lib/event-handlers')
 var PrimusHandler = require('./lib/primus-handlers')
 var User = require('./lib/models/user')
+var mongoose = require('mongoose')
+
 var server = new Hapi.Server({
   connections: {
     routes: {
@@ -74,18 +76,40 @@ if (!module.parent) {
   })
 }
 
-function setUpAdminUser () {
+function setUpAdminUser (emitter) {
   var salt = bcrypt.genSaltSync(10)
   var admin = {
     name: config.adminUser,
     secret: bcrypt.hashSync(config.adminPwd, salt),
     role: 'admin',
-    projects: []
+    projects: ['default'],
+    session: {}
   }
-  User.save(admin).then(function (id) {
-    logger.info('created admin user')
-  }).catch(function (err) {
-    logger.warn('failed to create admin user', err)
+  if (config.dbType === 'mongodb') {
+    require('deasync').loopWhile(function () {
+      return mongoose.connection.readyState !== 1
+    })
+    if (config.clearDB) {
+      mongoose.connection.db.dropDatabase()
+      mongoose.disconnect()
+      mongoose.connect(config.mongoDbURI)
+    }
+    require('deasync').loopWhile(function () {
+      return mongoose.connection.readyState !== 1
+    })
+  }
+  User.findByQuery({name: config.adminUser}).then(function (list) {
+    if (list.length === 0) {
+      User.save(admin).then(function (id) {
+        logger.info('created admin user with id ' + id)
+        global.striderReady = true
+      }).then(null, function (err) {
+        logger.warn('failed to create admin user ' + err)
+      })
+    } else {
+      logger.warn('admin user exists and will not be replaced!')
+      global.striderReady = true
+    }
   })
 }
 

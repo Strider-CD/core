@@ -3,18 +3,19 @@
 
 require('babel/register')
 
-var tape = require('tape')
 var server = require('../index')
 var config = require('config')
 var v = require('validator')
 var Project = require('../lib/models/project')
 var Job = require('../lib/models/job')
 var pull_request = require('./fixtures/github/pull_request')
+var tape = require('./helpers/persistence')
 
 var apiPrefix = config.apiPrefix
 var createdProjectId = ''
 var timeBeforeJobSubmit
-// clean job collection
+// clean job and project collection
+Project.purge()
 Job.purge()
 
 var token = null
@@ -108,7 +109,7 @@ tape('projects - check list of projects after create', function (t) {
 
 tape('projects - webhook github', function (t) {
   var options = {
-    url: apiPrefix + `projects/${createdProjectId}/webhooks/github`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/github',
     method: 'POST',
     headers: {
       'X-Github-Event': 'pull_request'
@@ -143,7 +144,7 @@ tape('project - check list of jobs', function (t) {
 
 tape('projects - find jobs created before the first job got submitted', function (t) {
   var options = {
-    url: `${apiPrefix}projects/${createdProjectId}/jobs/receivedAt/lt/${timeBeforeJobSubmit}`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/jobs/receivedAt/lt/' + timeBeforeJobSubmit,
     method: 'GET',
     headers: {
       authorization: token
@@ -160,7 +161,7 @@ tape('projects - find jobs created before the first job got submitted', function
 
 tape('projects - find jobs after first job was submitted', function (t) {
   var options = {
-    url: `${apiPrefix}projects/${createdProjectId}/jobs/receivedAt/gte/${timeBeforeJobSubmit}`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/jobs/receivedAt/gte/' + timeBeforeJobSubmit,
     method: 'GET',
     headers: {
       authorization: token
@@ -177,7 +178,7 @@ tape('projects - find jobs after first job was submitted', function (t) {
 
 tape('projects - webhook gitlab', function (t) {
   var options = {
-    url: apiPrefix + `projects/${createdProjectId}/webhooks/gitlab`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/gitlab',
     method: 'POST',
     payload: {
     },
@@ -195,7 +196,7 @@ tape('projects - webhook gitlab', function (t) {
 
 tape('projects - webhook bitbucket', function (t) {
   var options = {
-    url: apiPrefix + `projects/${createdProjectId}/webhooks/bitbucket`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/bitbucket',
     method: 'POST',
     payload: {
     },
@@ -213,7 +214,7 @@ tape('projects - webhook bitbucket', function (t) {
 
 tape('projects - webhook rest', function (t) {
   var options = {
-    url: apiPrefix + `projects/${createdProjectId}/webhooks/rest`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/rest',
     method: 'POST',
     payload: {
     },
@@ -228,3 +229,6 @@ tape('projects - webhook rest', function (t) {
     t.end()
   })
 })
+
+Project.purge()
+Job.purge()

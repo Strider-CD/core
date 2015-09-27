@@ -3,12 +3,13 @@
 
 require('babel/register')
 
-var tape = require('tape')
 var server = require('../index')
-var config = require('config')
 var Job = require('../lib/models/job')
+var Project = require('../lib/models/project')
 var v = require('validator')
 var pull_request = require('./fixtures/github/pull_request')
+var tape = require('./helpers/persistence')
+var config = require('config')
 
 var apiPrefix = config.apiPrefix
 var retrievedJob = null
@@ -20,6 +21,8 @@ var token = null
 var basicHeader = function (username, password) {
   return 'Basic ' + (new Buffer(username + ':' + password, 'utf8')).toString('base64')
 }
+
+Job.purge()
 
 tape('job - login with admin', function (t) {
   var options = {
@@ -39,9 +42,6 @@ tape('job - login with admin', function (t) {
 })
 
 tape('job - database should be empty', function (t) {
-  // clean job collection
-  Job.purge()
-
   var options = {
     url: apiPrefix + 'jobs',
     method: 'GET',
@@ -85,7 +85,7 @@ tape('job - create project in order to inject a github pull_request', function (
 
 tape('projects - create a job through a project webhook (github)', function (t) {
   var options = {
-    url: apiPrefix + `projects/${createdProjectId}/webhooks/github`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/github',
     method: 'POST',
     // not that we do not authenticate github
     headers: {
@@ -115,6 +115,7 @@ tape('job - check list of jobs', function (t) {
 
   server.inject(options, function (res) {
     var data = res.result
+    console.log('data', data)
     t.equal(res.statusCode, 200)
     t.ok(data.length > 0, 'job present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')
@@ -124,7 +125,7 @@ tape('job - check list of jobs', function (t) {
 
 tape('job - find jobs created before the first job got submitted', function (t) {
   var options = {
-    url: `${apiPrefix}jobs/receivedAt/lt/${timeBeforeJobSubmit}`,
+    url: apiPrefix + 'jobs/receivedAt/lt/' + timeBeforeJobSubmit,
     method: 'GET',
     headers: {
       authorization: token
@@ -141,7 +142,7 @@ tape('job - find jobs created before the first job got submitted', function (t) 
 
 tape('job - find jobs after first job was submitted', function (t) {
   var options = {
-    url: `${apiPrefix}jobs/receivedAt/gte/${timeBeforeJobSubmit}`,
+    url: apiPrefix + 'jobs/receivedAt/gte/' + timeBeforeJobSubmit,
     method: 'GET',
     headers: {
       authorization: token
@@ -213,7 +214,7 @@ tape('job - check list of jobs again', function (t) {
 
 tape('projects - create a second job through a project webhook (github)', function (t) {
   var options = {
-    url: apiPrefix + `projects/${createdProjectId}/webhooks/github`,
+    url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/github',
     method: 'POST',
     headers: {
       'X-Github-Event': 'pull_request'
@@ -293,3 +294,6 @@ tape('job - find only finished jobs', function (t) {
     t.end()
   })
 })
+
+Job.purge()
+Project.purge()

@@ -3,9 +3,12 @@
   baseUrl: 'localhost:8000',
   apiVersion: 1,
   apiPrefix: '/api/v1/',
-  jwtSecret: '7n4LIj8GL7f&b9hR=o[&#6?^O|,.{0', 
+  jwtSecret: '7n4LIj8GL7f&b9hR=o[&#6?^O|,.{0',
   adminUser: 'admin',
   adminPwd: 'admin',
+  mongoDbURI: 'mongodb://localhost/TestDB',
+  dbType: '',
+  clearDB: false,
 
   github: {
     apiServer: 'api.github.com',
