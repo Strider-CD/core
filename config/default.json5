@@ -9,6 +9,8 @@
   mongoDbURI: 'mongodb://localhost/TestDB',
   dbType: '',
   clearDB: false,
+  defaultProjectName: 'default',
+  defaultProjectId: 'a04ea060-6573-11e5-bf7f-01493a48fb32',
 
   github: {
     apiServer: 'api.github.com',
