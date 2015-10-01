@@ -115,7 +115,6 @@ tape('job - check list of jobs', function (t) {
 
   server.inject(options, function (res) {
     var data = res.result
-    console.log('data', data)
     t.equal(res.statusCode, 200)
     t.ok(data.length > 0, 'job present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')

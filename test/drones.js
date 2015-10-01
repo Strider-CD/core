@@ -114,7 +114,6 @@ tape('drones - list after register using drone Token', function (t) {
 
   server.inject(options, function (res) {
     var data = res.result
-    console.log('data', data)
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length > 0, 'Data has results')
