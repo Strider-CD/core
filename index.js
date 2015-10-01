@@ -116,7 +116,6 @@ function setUpAdminUser () {
 }
 
 function setUpDefaultProject () {
-  var salt = bcrypt.genSaltSync(10)
   var project = {
     name: config.defaultProjectName,
     id: config.defaultProjectId,
