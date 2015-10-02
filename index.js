@@ -16,6 +16,9 @@ var routes = require('./lib/routes')
 var eventHandlers = require('./lib/event-handlers')
 var PrimusHandler = require('./lib/primus-handlers')
 var User = require('./lib/models/user')
+var Project = require('./lib/models/project')
+var mongoose = require('mongoose')
+
 var server = new Hapi.Server({
   connections: {
     routes: {
@@ -60,6 +63,7 @@ server.register(hapiPlugins, function (err) {
   server.route(routes(emitter))
 })
 setUpAdminUser()
+setUpDefaultProject()
 
 if (!module.parent) {
   server.start(function (err) {
@@ -80,12 +84,69 @@ function setUpAdminUser () {
     name: config.adminUser,
     secret: bcrypt.hashSync(config.adminPwd, salt),
     role: 'admin',
-    projects: []
+    projects: ['default'],
+    session: {}
   }
-  User.save(admin).then(function (id) {
-    logger.info('created admin user')
-  }).catch(function (err) {
-    logger.warn('failed to create admin user', err)
+  if (config.dbType === 'mongodb') {
+    require('deasync').loopWhile(function () {
+      return mongoose.connection.readyState !== 1
+    })
+    if (config.clearDB) {
+      mongoose.connection.db.dropDatabase()
+      mongoose.disconnect()
+      mongoose.connect(config.mongoDbURI)
+    }
+    require('deasync').loopWhile(function () {
+      return mongoose.connection.readyState !== 1
+    })
+  }
+  User.findByQuery({name: config.adminUser}).then(function (list) {
+    if (list.length === 0) {
+      User.save(admin).then(function (id) {
+        logger.info('created admin user with id ' + id)
+        global.striderReady = true
+      }).then(null, function (err) {
+        logger.warn('failed to create admin user ' + err)
+      })
+    } else {
+      logger.warn('admin user exists and will not be replaced!')
+      global.striderReady = true
+    }
+  })
+}
+
+function setUpDefaultProject () {
+  var project = {
+    name: config.defaultProjectName,
+    id: config.defaultProjectId,
+    environments: [],
+    provider: {
+      type: 'github'
+    }
+  }
+  if (config.dbType === 'mongodb') {
+    require('deasync').loopWhile(function () {
+      return mongoose.connection.readyState !== 1
+    })
+    if (config.clearDB) {
+      mongoose.connection.db.dropDatabase()
+      mongoose.disconnect()
+      mongoose.connect(config.mongoDbURI)
+    }
+    require('deasync').loopWhile(function () {
+      return mongoose.connection.readyState !== 1
+    })
+  }
+  Project.findByQuery({name: config.defaultProjectName}).then(function (list) {
+    if (list.length === 0) {
+      Project.save(project).then(function (id) {
+        logger.info('created default project with id ' + id)
+      }).then(null, function (err) {
+        logger.warn('failed to create admin user ' + err)
+      })
+    } else {
+      logger.warn('default project exists and will not be replaced!')
+    }
   })
 }
 

@@ -1,12 +1,13 @@
 'use strict'
 // post on testing hapi https://medium.com/the-spumko-suite/testing-hapi-services-with-lab-96ac463c490a
 
-require('babel/register')
+require('babel/register')({
+  optional: ['es7.decorators', 'es7.objectRestSpread']
+})
 
-var tape = require('tape')
 var server = require('../index')
+var tape = require('./helpers/persistence')
 var config = require('config')
-var User = require('../lib/models/drone')
 
 var apiPrefix = config.apiPrefix
 
@@ -17,9 +18,6 @@ var basicHeader = function (username, password) {
 var token = null
 
 tape('user - list before login', function (t) {
-  // clean drone collection
-  User.purge()
-
   var options = {
     url: apiPrefix + 'users',
     method: 'GET'

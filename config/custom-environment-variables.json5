@@ -4,6 +4,11 @@
   jwtSecret: 'STRIDER_JWT_SECRET',
   adminUser: 'STRIDER_ADMIN_USER',
   adminPwd: 'STRIDER_ADMIN_PWD',
+  mongoDbURI: 'STRIDER_MONGODB_URI',
+  dbType: 'STRIDER_DB_TYPE',
+  clearDB: 'STRIDER_CLEAR_DB',
+  defaultProjectName: 'STRIDER_DEFAULT_PROJECT_NAME',
+  defaultProjectId: 'STRIDER_DEFAULT_PROJECT_ID',
 
   github: {
     apiServer: 'STRIDER_GITHUB_API_SERVER',
