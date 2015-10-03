@@ -1,6 +1,7 @@
 {
   port: 'PORT',
   baseUrl: 'STRIDER_URL_BASE',
+  striderUrl: 'STRIDER_URL',
   jwtSecret: 'STRIDER_JWT_SECRET',
   adminUser: 'STRIDER_ADMIN_USER',
   adminPwd: 'STRIDER_ADMIN_PWD',
@@ -13,6 +14,7 @@
   github: {
     apiServer: 'STRIDER_GITHUB_API_SERVER',
     key: 'STRIDER_GITHUB_KEY',
-    secret: 'STRIDER_GITHUB_SECRET'
+    secret: 'STRIDER_GITHUB_SECRET',
+    token: 'STRIDER_GITHUB_TOKEN'
   }
 }
