@@ -54,14 +54,17 @@ server.register(hapiPlugins, function (err) {
   // Basic auth for drones
   server.auth.strategy('userBasicAuth', 'basic', { validateFunc: auth.userBasicAuth })
   // JWT for drones, users and API calls (using user token)
-  server.auth.strategy('jwtAuth', 'jwt',
-    { key: config.jwtSecret,
-      validateFunc: auth.jwtAuth,
-      verifyOptions: { algorithms: [ 'HS256' ] }
-    })
+  server.auth.strategy('jwtAuth', 'jwt', {
+    key: config.jwtSecret,
+    validateFunc: auth.jwtAuth,
+    verifyOptions: { algorithms: [ 'HS256' ] }
+  })
+
   server.auth.default('jwtAuth')
   server.route(routes(emitter))
 })
+
+// Setup on first start
 setUpAdminUser()
 setUpDefaultProject()
 
@@ -74,7 +77,8 @@ if (!module.parent) {
     if (!(process.env.STRIDER_ADMIN_USER) || !(process.env.STRIDER_ADMIN_PWD)) {
       logger.warn('WARNING: using default admin user name and password')
     }
-    logger.info('Server started', server.info.uri)
+
+    logger.info('Server started ' + server.info.uri)
   })
 }
 
