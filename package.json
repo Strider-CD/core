@@ -8,7 +8,7 @@
     "lint": "snazzy",
     "test": "tape test/*.js | tap-spec",
     "posttest": "npm run lint",
-    "test-coverage": "istanbul cover test/*.js --report lcovonly | tap-spec",
+    "test-coverage": "babel-istanbul cover test/*.js --report lcovonly | tap-spec",
     "docs": "apidoc -i lib/ -o docs/"
   },
   "repository": {
@@ -28,11 +28,11 @@
     "apidoc": "^0.13.1",
     "babel": "^5.8.21",
     "babel-eslint": "^4.0.10",
+    "babel-istanbul": "^0.6.0",
     "eslint": "^1.2.1",
     "eslint-config-standard": "^4.1.0",
     "eslint-plugin-standard": "^1.3.0",
     "grunt": "^0.4.5",
-    "istanbul": "^0.3.18",
     "snazzy": "^1.0.1",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
