@@ -38,6 +38,7 @@
     "tape": "^4.0.0"
   },
   "dependencies": {
+    "bcryptjs": "^2.3.0",
     "bluebird": "^2.4.2",
     "config": "^1.14.0",
     "deasync": "^0.1.2",
