@@ -103,6 +103,7 @@ tape('projects - check list of projects after create', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data.length > 0, 'project present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'project has id')
+    t.ok(data[0].id === createdProjectId, 'project id same as created')
     t.end()
   })
 })
