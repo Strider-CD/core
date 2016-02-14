@@ -17,7 +17,11 @@
     "url": "git+https://github.com/Strider-CD/core.git"
   },
   "keywords": [
-    "Strider"
+    "Strider",
+    "continuous integration",
+    "ci",
+    "deployment",
+    "drones"
   ],
   "author": "Ilya Radchenko <ilya@burstcreations.com> (https://github.com/knownasilya)",
   "license": "BSD-3-Clause",
