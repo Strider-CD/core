@@ -9,6 +9,7 @@
     "test": "tape test/*.js | tap-spec",
     "posttest": "npm run lint",
     "test-coverage": "babel-istanbul cover test/*.js --report lcovonly | tap-spec",
+    "posttest-coverage": "npm run lint",
     "docs": "apidoc -i lib/ -o docs/"
   },
   "repository": {
