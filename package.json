@@ -29,6 +29,9 @@
     "url": "https://github.com/Strider-CD/core/issues"
   },
   "homepage": "https://github.com/Strider-CD/core#readme",
+  "engines": {
+    "node": ">=4.2.3"
+  },
   "devDependencies": {
     "apidoc": "^0.15.0",
     "babel": "^5.8.34",
