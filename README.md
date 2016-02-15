@@ -6,6 +6,8 @@ Strider Core - API connecting projects and drones for continuous integration/dep
 [![Code Climate](https://codeclimate.com/github/Strider-CD/core/badges/gpa.svg)](https://codeclimate.com/github/Strider-CD/core)
 [![Coverage Status](https://coveralls.io/repos/Strider-CD/core/badge.svg?branch=master&service=github)](https://coveralls.io/github/Strider-CD/core?branch=master)
 
+Requires Node 4.2.3 or greater.
+
 ## Related Modules
 
 * [drone](https://github.com/Strider-CD/drone) - Drones are lightweight plugin
