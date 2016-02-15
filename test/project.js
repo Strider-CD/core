@@ -231,5 +231,24 @@ tape('projects - webhook rest', function (t) {
   })
 })
 
+tape('projects - environments - list', function (t) {
+  var options = {
+    url: `${apiPrefix}projects/${createdProjectId}/environments`,
+    method: 'GET',
+    headers: {
+      authorization: token
+    }
+  }
+
+  server.inject(options, function (res) {
+    var data = res.result
+
+    t.equal(res.statusCode, 200)
+    t.ok(data && Array.isArray(data), 'Data is array')
+    t.equal(data.length, 0, 'Data has no results')
+    t.end()
+  })
+})
+
 Project.purge()
 Job.purge()

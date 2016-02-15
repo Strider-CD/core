@@ -13,7 +13,7 @@ var apiPrefix = config.apiPrefix
 var createdProjectId
 var token
 
-// clean job and project collection
+// clean collections
 Environment.purge()
 
 var basicHeader = function (username, password) {
@@ -63,9 +63,9 @@ tape('environments - create test project', function (t) {
   })
 })
 
-tape('environments - list', function (t) {
+tape('environments - list all environments', function (t) {
   var options = {
-    url: `${apiPrefix}projects/${createdProjectId}/environments`,
+    url: `${apiPrefix}environments`,
     method: 'GET',
     headers: {
       authorization: token
@@ -73,11 +73,10 @@ tape('environments - list', function (t) {
   }
 
   server.inject(options, function (res) {
-    var data = res.result
-
-    t.equal(res.statusCode, 200)
-    t.ok(data && Array.isArray(data), 'Data is array')
-    t.equal(data.length, 0, 'Data has no results')
+    t.equal(res.statusCode, 200, '200 status')
+    t.equal(res.result.length, 0, 'Has no items')
     t.end()
   })
 })
+
+Environment.purge()
