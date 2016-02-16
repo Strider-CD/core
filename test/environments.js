@@ -79,4 +79,22 @@ tape('environments - list all environments', function (t) {
   })
 })
 
+tape('environments - create one', function (t) {
+  var options = {
+    url: `${apiPrefix}environments`,
+    method: 'POST',
+    headers: {
+      authorization: token
+    },
+    payload: {
+      name: 'test'
+    }
+  }
+
+  server.inject(options, function (res) {
+    t.ok(v.isUUID(res.result), 'returned a uuid')
+    t.end()
+  })
+})
+
 Environment.purge()
