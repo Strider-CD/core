@@ -9,6 +9,7 @@
     "test": "tape test/*.js | tap-spec",
     "posttest": "npm run lint",
     "test-coverage": "babel-istanbul cover test/*.js --report lcovonly | tap-spec",
+    "send-coverage": "codeclimate-test-reporter < coverage/lcov.info",
     "posttest-coverage": "npm run lint",
     "docs": "apidoc -i lib/ -o docs/"
   },
@@ -37,6 +38,7 @@
     "babel": "^5.8.34",
     "babel-eslint": "^4.0.10",
     "babel-istanbul": "0.4.0",
+    "codeclimate-test-reporter": "^0.3.1",
     "eslint-config-standard": "^5.1.0",
     "eslint-plugin-promise": "^1.0.8",
     "eslint-plugin-standard": "^1.3.0",
