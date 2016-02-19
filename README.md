@@ -4,7 +4,7 @@ Strider Core - API connecting projects and drones for continuous integration/dep
 
 [![Build Status](https://travis-ci.org/Strider-CD/core.svg)](https://travis-ci.org/Strider-CD/core)
 [![Code Climate](https://codeclimate.com/github/Strider-CD/core/badges/gpa.svg)](https://codeclimate.com/github/Strider-CD/core)
-[![Coverage Status](https://coveralls.io/repos/Strider-CD/core/badge.svg?branch=master&service=github)](https://coveralls.io/github/Strider-CD/core?branch=master)
+[![Test Coverage](https://codeclimate.com/github/Strider-CD/core/badges/coverage.svg)](https://codeclimate.com/github/Strider-CD/core/coverage)
 
 Requires Node 4.2.3 or greater.
 
