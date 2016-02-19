@@ -1,6 +1,4 @@
 engines:
-  eslint:
-    enabled: true
   nodesecurity:
       enabled: true
 
