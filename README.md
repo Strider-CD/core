@@ -31,4 +31,6 @@ Tests are written with [tape] and Hapi's internal injection system.
 npm test
 ```
 
+Also see https://github.com/phiros/inject-github-pr for easy testing during dev.
+
 [tape]: https://github.com/substack/tape
