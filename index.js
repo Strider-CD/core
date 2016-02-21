@@ -61,7 +61,8 @@ server.register(hapiPlugins, function (err) {
   })
 
   server.auth.default('jwtAuth')
-  server.route(routes(emitter))
+  var routeList = routes(emitter)
+  server.route(routeList)
 })
 
 // Setup on first start
