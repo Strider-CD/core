@@ -7,6 +7,7 @@ require('babel/register')({
 var Hapi = require('hapi')
 var hapiAuthBasic = require('hapi-auth-basic')
 var hapiAuthJWT = require('hapi-auth-jwt2')
+var good = require('good')
 var auth = require('./lib/auth')
 var bcrypt = require('bcryptjs')
 var config = require('config')
@@ -38,13 +39,18 @@ server.primus = primus
 var emitter = new EventEmitter()
 eventHandlers(emitter, primus)
 
-// Super simple logging
-// TODO: add something more inteligent, maybe using `good` module
-server.on('response', function (request) {
-  console.log(request.info.remoteAddress + ' : ' + request.method.toUpperCase() + ' ' + request.url.path + ' --> ' + request.response.statusCode)
-})
-
-var hapiPlugins = [hapiAuthBasic, hapiAuthJWT]
+var hapiPlugins = [
+  hapiAuthBasic, hapiAuthJWT,
+  {
+    register: good,
+    options: {
+      reporters: [{
+        reporter: require('good-console'),
+        events: { log: ['error', 'medium'], error: '*' }
+      }]
+    }
+  }
+]
 server.register(hapiPlugins, function (err) {
   if (err) {
     return console.error(err)

@@ -55,6 +55,8 @@
     "eventemitter3": "^1.1.1",
     "flat": "^2.0.0",
     "github": "^0.2.4",
+    "good": "^6.6.0",
+    "good-console": "^5.3.1",
     "hapi": "^13.0.0",
     "hapi-auth-basic": "^4.1.0",
     "hapi-auth-jwt2": "^5.0.7",
