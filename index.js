@@ -57,7 +57,7 @@ server.register(hapiPlugins, function (err) {
   }
   // Basic auth for drones
   server.auth.strategy('droneBasicAuth', 'basic', { validateFunc: auth.droneBasicAuth })
-  // Basic auth for drones
+  // Basic auth for users
   server.auth.strategy('userBasicAuth', 'basic', { validateFunc: auth.userBasicAuth })
   // JWT for drones, users and API calls (using user token)
   server.auth.strategy('jwtAuth', 'jwt', {
