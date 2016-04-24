@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "lint": "snazzy index.js lib/**/*.js",
+    "pretest": "npm run lint",
     "test": "tape test/*.js | tap-spec",
-    "posttest": "npm run lint",
     "test-coverage": "babel-istanbul cover test/*.js --report lcovonly | tap-spec",
     "send-coverage": "codeclimate-test-reporter < coverage/lcov.info",
     "posttest-coverage": "npm run lint",

@@ -8,7 +8,7 @@ var Drone = require('../lib/models/drone')
 var Job = require('../lib/models/job')
 var Project = require('../lib/models/project')
 var v = require('validator')
-var tape = require('./helpers/persistence')
+var test = require('./helpers/persistence')
 var config = require('config')
 
 var apiPrefix = config.apiPrefix
@@ -25,7 +25,7 @@ Drone.purge()
 Job.purge()
 Project.purge()
 
-tape('drones - login with admin', function (t) {
+test('drones - login with admin', function (t) {
   var options = {
     url: apiPrefix + 'users/login',
     method: 'GET',
@@ -38,11 +38,11 @@ tape('drones - login with admin', function (t) {
     token = res.headers.authorization
     t.ok(token && token.length > 10, 'Got token')
     t.equal(res.statusCode, 200)
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('drones - list before register', function (t) {
+test('drones - list before register', function (t) {
   // clean drone collection
   Drone.purge()
   var options = {
@@ -59,11 +59,11 @@ tape('drones - list before register', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length === 0, 'Data has no results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('drones - register', function (t) {
+test('drones - register', function (t) {
   var options = {
     url: apiPrefix + 'drones',
     method: 'POST',
@@ -77,14 +77,14 @@ tape('drones - register', function (t) {
   }
 
   server.inject(options, function (res) {
-    droneToken = res.headers.authorization
+    droneToken = JSON.parse(res.payload).token
     t.equal(res.statusCode, 200)
     t.ok(droneToken !== token && typeof droneToken === 'string', 'Drone has a token')
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('drones - list after register using drone Token', function (t) {
+test('drones - list after register using drone Token', function (t) {
   var options = {
     url: apiPrefix + 'drones',
     method: 'GET',
@@ -99,11 +99,11 @@ tape('drones - list after register using drone Token', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length > 0, 'Data has results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('drones - list after register using drone Token', function (t) {
+test('drones - list after register using drone Token', function (t) {
   var options = {
     url: apiPrefix + 'drones',
     method: 'GET',
@@ -117,11 +117,11 @@ tape('drones - list after register using drone Token', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length > 0, 'Data has results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('drones - create a project in order to inject a job', function (t) {
+test('drones - create a project in order to inject a job', function (t) {
   var options = {
     url: apiPrefix + 'projects',
     method: 'POST',
@@ -143,7 +143,7 @@ tape('drones - create a project in order to inject a job', function (t) {
     t.ok(createdProjectId,
       typeof createdProjectId === 'string' && v.isUUID(createdProjectId),
       'Project ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 

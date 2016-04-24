@@ -7,7 +7,7 @@ var v = require('validator')
 var config = require('config')
 var server = require('../index')
 var Environment = require('../lib/models/environment')
-var tape = require('./helpers/persistence')
+var test = require('./helpers/persistence')
 
 var apiPrefix = config.apiPrefix
 var createdProjectId
@@ -20,7 +20,7 @@ var basicHeader = function (username, password) {
   return 'Basic ' + (new Buffer(username + ':' + password, 'utf8')).toString('base64')
 }
 
-tape('environment - login with admin', function (t) {
+test('environment - login with admin', function (t) {
   var options = {
     url: apiPrefix + 'users/login',
     method: 'GET',
@@ -33,11 +33,11 @@ tape('environment - login with admin', function (t) {
     token = res.headers.authorization
     t.ok(token && token.length > 10, 'Got token')
     t.equal(res.statusCode, 200)
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('environments - create test project', function (t) {
+test('environments - create test project', function (t) {
   var options = {
     url: apiPrefix + 'projects',
     method: 'POST',
@@ -59,11 +59,11 @@ tape('environments - create test project', function (t) {
     t.ok(createdProjectId,
       typeof createdProjectId === 'string' && v.isUUID(createdProjectId),
       'Project ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('environments - list all environments', function (t) {
+test('environments - list all environments', function (t) {
   var options = {
     url: `${apiPrefix}environments`,
     method: 'GET',
@@ -75,11 +75,11 @@ tape('environments - list all environments', function (t) {
   server.inject(options, function (res) {
     t.equal(res.statusCode, 200, '200 status')
     t.equal(res.result.length, 0, 'Has no items')
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('environments - create one', function (t) {
+test('environments - create one', function (t) {
   var options = {
     url: `${apiPrefix}environments`,
     method: 'POST',
@@ -93,7 +93,7 @@ tape('environments - create one', function (t) {
 
   server.inject(options, function (res) {
     t.ok(v.isUUID(res.result), 'returned a uuid')
-    t.end()
+    server.stop(t.end)
   })
 })
 

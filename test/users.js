@@ -6,7 +6,7 @@ require('babel/register')({
 })
 
 var server = require('../index')
-var tape = require('./helpers/persistence')
+var test = require('./helpers/persistence')
 var config = require('config')
 
 var apiPrefix = config.apiPrefix
@@ -17,7 +17,7 @@ var basicHeader = function (username, password) {
 
 var token = null
 
-tape('user - list before login', function (t) {
+test('user - list before login', function (t) {
   var options = {
     url: apiPrefix + 'users',
     method: 'GET'
@@ -25,11 +25,11 @@ tape('user - list before login', function (t) {
 
   server.inject(options, function (res) {
     t.equal(res.statusCode, 401)
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('user - login', function (t) {
+test('user - login', function (t) {
   var options = {
     url: apiPrefix + 'users/login',
     method: 'GET',
@@ -42,11 +42,11 @@ tape('user - login', function (t) {
     token = res.headers.authorization
     t.ok(token && token.length > 10, 'Got token')
     t.equal(res.statusCode, 200)
-    t.end()
+    server.stop(t.end)
   })
 })
 
-tape('user - list after login', function (t) {
+test('user - list after login', function (t) {
   var options = {
     url: apiPrefix + 'users',
     method: 'GET',
@@ -61,6 +61,6 @@ tape('user - list after login', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length > 0, 'Data has results')
-    t.end()
+    server.stop(t.end)
   })
 })
