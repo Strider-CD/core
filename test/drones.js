@@ -38,7 +38,7 @@ tape('drones - login with admin', function (t) {
     token = res.headers.authorization
     t.ok(token && token.length > 10, 'Got token')
     t.equal(res.statusCode, 200)
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -59,7 +59,7 @@ tape('drones - list before register', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length === 0, 'Data has no results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -80,7 +80,7 @@ tape('drones - register', function (t) {
     droneToken = JSON.parse(res.payload).token
     t.equal(res.statusCode, 200)
     t.ok(droneToken !== token && typeof droneToken === 'string', 'Drone has a token')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -99,7 +99,7 @@ tape('drones - list after register using drone Token', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length > 0, 'Data has results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -117,7 +117,7 @@ tape('drones - list after register using drone Token', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length > 0, 'Data has results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -143,7 +143,7 @@ tape('drones - create a project in order to inject a job', function (t) {
     t.ok(createdProjectId,
       typeof createdProjectId === 'string' && v.isUUID(createdProjectId),
       'Project ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 

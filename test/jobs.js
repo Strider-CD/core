@@ -37,7 +37,7 @@ tape('job - login with admin', function (t) {
     token = res.headers.authorization
     t.ok(token && token.length > 10, 'Got token')
     t.equal(res.statusCode, 200)
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -53,7 +53,7 @@ tape('job - database should be empty', function (t) {
     var data = res.result
     t.equal(res.statusCode, 200)
     t.same(data, [], 'no jobs avaiable as expected')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -79,7 +79,7 @@ tape('job - create project in order to inject a github pull_request', function (
     t.ok(createdProjectId,
       typeof createdProjectId === 'string' && v.isUUID(createdProjectId),
       'Project ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -97,7 +97,7 @@ tape('projects - create a job through a project webhook (github)', function (t) 
   server.inject(options, function (res) {
     t.equal(res.statusCode, 200)
     t.equal(res.result, null, 'Webhook ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -118,7 +118,7 @@ tape('job - check list of jobs', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data.length > 0, 'job present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -135,7 +135,7 @@ tape('job - find jobs created before the first job got submitted', function (t) 
     var data = res.result
     t.equal(res.statusCode, 200)
     t.ok(data.length === 0, 'no job was created before')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -152,7 +152,7 @@ tape('job - find jobs after first job was submitted', function (t) {
     var data = res.result
     t.equal(res.statusCode, 200)
     t.ok(data.length === 1 && (data[0].receivedAt >= timeBeforeJobSubmit), 'one job was created after')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -171,7 +171,7 @@ tape('job - get a job from the queue', function (t) {
     t.ok(Job.validate(data), 'job conforms to schema')
     t.ok(data.status && data.status === 'running', 'job is now marked as running')
     t.ok(data.id && (typeof data.id === 'string') && data.id.length > 5, 'job has id')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -189,7 +189,7 @@ tape('job - try to get a second job from the queue', function (t) {
 
     t.equal(res.statusCode, 503) // resource temporarly not avaiable
     t.ok(!!Job.validate(data).error, 'job does not conform to schema')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -207,7 +207,7 @@ tape('job - check list of jobs again', function (t) {
     t.ok(data.length === 1, 'only one job should be present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')
     t.ok(data[0].status && data[0].status === 'running', 'job status should be running')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -223,7 +223,7 @@ tape('projects - create a second job through a project webhook (github)', functi
   server.inject(options, function (res) {
     t.equal(res.statusCode, 200)
     t.equal(res.result, null, 'Webhook ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -242,7 +242,7 @@ tape('job - find only received jobs', function (t) {
     t.ok(data.length === 1, 'only one job should be present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')
     t.ok(data[0].status && data[0].status === 'received', 'job status should be received')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -272,7 +272,7 @@ tape('job - update job', function (t) {
     var data = res.result
     t.equal(res.statusCode, 200)
     t.ok(data && typeof data === 'string' && data === retrievedJob.id, 'got id of updated job back')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -290,7 +290,7 @@ tape('job - find only finished jobs', function (t) {
     t.ok(data.length === 1, 'only one job should be present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')
     t.ok(data[0].status && data[0].status === 'finished', 'job status should be finished')
-    t.end()
+    server.stop(t.end)
   })
 })
 

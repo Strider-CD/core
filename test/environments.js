@@ -33,7 +33,7 @@ tape('environment - login with admin', function (t) {
     token = res.headers.authorization
     t.ok(token && token.length > 10, 'Got token')
     t.equal(res.statusCode, 200)
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -59,7 +59,7 @@ tape('environments - create test project', function (t) {
     t.ok(createdProjectId,
       typeof createdProjectId === 'string' && v.isUUID(createdProjectId),
       'Project ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -75,7 +75,7 @@ tape('environments - list all environments', function (t) {
   server.inject(options, function (res) {
     t.equal(res.statusCode, 200, '200 status')
     t.equal(res.result.length, 0, 'Has no items')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -93,7 +93,7 @@ tape('environments - create one', function (t) {
 
   server.inject(options, function (res) {
     t.ok(v.isUUID(res.result), 'returned a uuid')
-    t.end()
+    server.stop(t.end)
   })
 })
 

@@ -37,7 +37,7 @@ tape('project - login with admin', function (t) {
     token = res.headers.authorization
     t.ok(token && token.length > 10, 'Got token')
     t.equal(res.statusCode, 200)
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -59,7 +59,7 @@ tape('projects - list', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.ok(data.length === 0, 'Data has no results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -85,7 +85,7 @@ tape('projects - create', function (t) {
     t.ok(createdProjectId,
       typeof createdProjectId === 'string' && v.isUUID(createdProjectId),
       'Project ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -104,7 +104,7 @@ tape('projects - check list of projects after create', function (t) {
     t.ok(data.length > 0, 'project present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'project has id')
     t.ok(data[0].id === createdProjectId, 'project id same as created')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -121,7 +121,7 @@ tape('projects - webhook github', function (t) {
   server.inject(options, function (res) {
     t.equal(res.statusCode, 200)
     t.equal(res.result, null, 'Webhook ready')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -139,7 +139,7 @@ tape('project - check list of jobs', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data.length > 0, 'job present')
     t.ok(data[0].id && typeof data[0].id === 'string', 'job has id')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -156,7 +156,7 @@ tape('projects - find jobs created before the first job got submitted', function
     var data = res.result
     t.equal(res.statusCode, 200)
     t.ok(data.length === 0, 'no job was created before')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -173,7 +173,7 @@ tape('projects - find jobs after first job was submitted', function (t) {
     var data = res.result
     t.equal(res.statusCode, 200)
     t.ok(data.length === 1 && (data[0].receivedAt >= timeBeforeJobSubmit), 'one job was created after')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -191,7 +191,7 @@ tape('projects - webhook gitlab', function (t) {
   server.inject(options, function (res) {
     t.equal(res.result, 'gitlab: not Implemented yet!', 'gitlab not implemented yet!')
     t.equal(res.statusCode, 501, 'not implemented')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -209,7 +209,7 @@ tape('projects - webhook bitbucket', function (t) {
   server.inject(options, function (res) {
     t.equal(res.result, 'bitbucket: not Implemented yet!', 'bitbucket not implemented yet!')
     t.equal(res.statusCode, 501, 'not implemented')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -227,7 +227,7 @@ tape('projects - webhook rest', function (t) {
   server.inject(options, function (res) {
     t.equal(res.result, 'rest: not Implemented yet!', 'rest not implemented yet!')
     t.equal(res.statusCode, 501, 'not implemented')
-    t.end()
+    server.stop(t.end)
   })
 })
 
@@ -246,7 +246,7 @@ tape('projects - environments - list', function (t) {
     t.equal(res.statusCode, 200)
     t.ok(data && Array.isArray(data), 'Data is array')
     t.equal(data.length, 0, 'Data has no results')
-    t.end()
+    server.stop(t.end)
   })
 })
 
