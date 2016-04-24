@@ -77,7 +77,7 @@ tape('drones - register', function (t) {
   }
 
   server.inject(options, function (res) {
-    droneToken = res.headers.authorization
+    droneToken = JSON.parse(res.payload).token
     t.equal(res.statusCode, 200)
     t.ok(droneToken !== token && typeof droneToken === 'string', 'Drone has a token')
     t.end()
