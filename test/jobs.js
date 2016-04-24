@@ -8,7 +8,7 @@ var Job = require('../lib/models/job')
 var Project = require('../lib/models/project')
 var v = require('validator')
 var pull_request = require('./fixtures/github/pull_request')
-var tape = require('./helpers/persistence')
+var test = require('./helpers/persistence')
 var config = require('config')
 
 var apiPrefix = config.apiPrefix
@@ -24,7 +24,7 @@ var basicHeader = function (username, password) {
 
 Job.purge()
 
-tape('job - login with admin', function (t) {
+test('job - login with admin', function (t) {
   var options = {
     url: apiPrefix + 'users/login',
     method: 'GET',
@@ -41,7 +41,7 @@ tape('job - login with admin', function (t) {
   })
 })
 
-tape('job - database should be empty', function (t) {
+test('job - database should be empty', function (t) {
   var options = {
     url: apiPrefix + 'jobs',
     method: 'GET',
@@ -57,7 +57,7 @@ tape('job - database should be empty', function (t) {
   })
 })
 
-tape('job - create project in order to inject a github pull_request', function (t) {
+test('job - create project in order to inject a github pull_request', function (t) {
   var options = {
     url: apiPrefix + 'projects',
     method: 'POST',
@@ -83,7 +83,7 @@ tape('job - create project in order to inject a github pull_request', function (
   })
 })
 
-tape('projects - create a job through a project webhook (github)', function (t) {
+test('projects - create a job through a project webhook (github)', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/github',
     method: 'POST',
@@ -104,7 +104,7 @@ tape('projects - create a job through a project webhook (github)', function (t) 
 // TODO: test mongodb like query strings which can be sent as 'payload'
 // e.g. '{}' list all jobs
 // '{status: received}' for unprocessed jobs etc.
-tape('job - check list of jobs', function (t) {
+test('job - check list of jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs',
     method: 'GET',
@@ -122,7 +122,7 @@ tape('job - check list of jobs', function (t) {
   })
 })
 
-tape('job - find jobs created before the first job got submitted', function (t) {
+test('job - find jobs created before the first job got submitted', function (t) {
   var options = {
     url: apiPrefix + 'jobs/receivedAt/lt/' + timeBeforeJobSubmit,
     method: 'GET',
@@ -139,7 +139,7 @@ tape('job - find jobs created before the first job got submitted', function (t) 
   })
 })
 
-tape('job - find jobs after first job was submitted', function (t) {
+test('job - find jobs after first job was submitted', function (t) {
   var options = {
     url: apiPrefix + 'jobs/receivedAt/gte/' + timeBeforeJobSubmit,
     method: 'GET',
@@ -156,7 +156,7 @@ tape('job - find jobs after first job was submitted', function (t) {
   })
 })
 
-tape('job - get a job from the queue', function (t) {
+test('job - get a job from the queue', function (t) {
   var options = {
     url: apiPrefix + 'jobs/retrieve',
     method: 'GET',
@@ -175,7 +175,7 @@ tape('job - get a job from the queue', function (t) {
   })
 })
 
-tape('job - try to get a second job from the queue', function (t) {
+test('job - try to get a second job from the queue', function (t) {
   var options = {
     url: apiPrefix + 'jobs/retrieve',
     method: 'GET',
@@ -193,7 +193,7 @@ tape('job - try to get a second job from the queue', function (t) {
   })
 })
 
-tape('job - check list of jobs again', function (t) {
+test('job - check list of jobs again', function (t) {
   var options = {
     url: apiPrefix + 'jobs',
     method: 'GET',
@@ -211,7 +211,7 @@ tape('job - check list of jobs again', function (t) {
   })
 })
 
-tape('projects - create a second job through a project webhook (github)', function (t) {
+test('projects - create a second job through a project webhook (github)', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/github',
     method: 'POST',
@@ -227,7 +227,7 @@ tape('projects - create a second job through a project webhook (github)', functi
   })
 })
 
-tape('job - find only received jobs', function (t) {
+test('job - find only received jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs/status/received',
     method: 'GET',
@@ -246,7 +246,7 @@ tape('job - find only received jobs', function (t) {
   })
 })
 
-tape('job - update job', function (t) {
+test('job - update job', function (t) {
   retrievedJob.stdout = {
     1: 'did',
     2: 'my',
@@ -276,7 +276,7 @@ tape('job - update job', function (t) {
   })
 })
 
-tape('job - find only finished jobs', function (t) {
+test('job - find only finished jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs/status/finished',
     method: 'GET',

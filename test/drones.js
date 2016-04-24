@@ -8,7 +8,7 @@ var Drone = require('../lib/models/drone')
 var Job = require('../lib/models/job')
 var Project = require('../lib/models/project')
 var v = require('validator')
-var tape = require('./helpers/persistence')
+var test = require('./helpers/persistence')
 var config = require('config')
 
 var apiPrefix = config.apiPrefix
@@ -25,7 +25,7 @@ Drone.purge()
 Job.purge()
 Project.purge()
 
-tape('drones - login with admin', function (t) {
+test('drones - login with admin', function (t) {
   var options = {
     url: apiPrefix + 'users/login',
     method: 'GET',
@@ -42,7 +42,7 @@ tape('drones - login with admin', function (t) {
   })
 })
 
-tape('drones - list before register', function (t) {
+test('drones - list before register', function (t) {
   // clean drone collection
   Drone.purge()
   var options = {
@@ -63,7 +63,7 @@ tape('drones - list before register', function (t) {
   })
 })
 
-tape('drones - register', function (t) {
+test('drones - register', function (t) {
   var options = {
     url: apiPrefix + 'drones',
     method: 'POST',
@@ -84,7 +84,7 @@ tape('drones - register', function (t) {
   })
 })
 
-tape('drones - list after register using drone Token', function (t) {
+test('drones - list after register using drone Token', function (t) {
   var options = {
     url: apiPrefix + 'drones',
     method: 'GET',
@@ -103,7 +103,7 @@ tape('drones - list after register using drone Token', function (t) {
   })
 })
 
-tape('drones - list after register using drone Token', function (t) {
+test('drones - list after register using drone Token', function (t) {
   var options = {
     url: apiPrefix + 'drones',
     method: 'GET',
@@ -121,7 +121,7 @@ tape('drones - list after register using drone Token', function (t) {
   })
 })
 
-tape('drones - create a project in order to inject a job', function (t) {
+test('drones - create a project in order to inject a job', function (t) {
   var options = {
     url: apiPrefix + 'projects',
     method: 'POST',

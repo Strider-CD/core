@@ -9,7 +9,7 @@ var v = require('validator')
 var Project = require('../lib/models/project')
 var Job = require('../lib/models/job')
 var pull_request = require('./fixtures/github/pull_request')
-var tape = require('./helpers/persistence')
+var test = require('./helpers/persistence')
 
 var apiPrefix = config.apiPrefix
 var createdProjectId = ''
@@ -24,7 +24,7 @@ var basicHeader = function (username, password) {
   return 'Basic ' + (new Buffer(username + ':' + password, 'utf8')).toString('base64')
 }
 
-tape('project - login with admin', function (t) {
+test('project - login with admin', function (t) {
   var options = {
     url: apiPrefix + 'users/login',
     method: 'GET',
@@ -41,7 +41,7 @@ tape('project - login with admin', function (t) {
   })
 })
 
-tape('projects - list', function (t) {
+test('projects - list', function (t) {
   // clean drone collection
   Project.purge()
 
@@ -63,7 +63,7 @@ tape('projects - list', function (t) {
   })
 })
 
-tape('projects - create', function (t) {
+test('projects - create', function (t) {
   var options = {
     url: apiPrefix + 'projects',
     method: 'POST',
@@ -89,7 +89,7 @@ tape('projects - create', function (t) {
   })
 })
 
-tape('projects - check list of projects after create', function (t) {
+test('projects - check list of projects after create', function (t) {
   var options = {
     url: apiPrefix + 'projects',
     method: 'GET',
@@ -108,7 +108,7 @@ tape('projects - check list of projects after create', function (t) {
   })
 })
 
-tape('projects - webhook github', function (t) {
+test('projects - webhook github', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/github',
     method: 'POST',
@@ -125,7 +125,7 @@ tape('projects - webhook github', function (t) {
   })
 })
 
-tape('project - check list of jobs', function (t) {
+test('project - check list of jobs', function (t) {
   var options = {
     url: apiPrefix + 'jobs',
     method: 'GET',
@@ -143,7 +143,7 @@ tape('project - check list of jobs', function (t) {
   })
 })
 
-tape('projects - find jobs created before the first job got submitted', function (t) {
+test('projects - find jobs created before the first job got submitted', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/jobs/receivedAt/lt/' + timeBeforeJobSubmit,
     method: 'GET',
@@ -160,7 +160,7 @@ tape('projects - find jobs created before the first job got submitted', function
   })
 })
 
-tape('projects - find jobs after first job was submitted', function (t) {
+test('projects - find jobs after first job was submitted', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/jobs/receivedAt/gte/' + timeBeforeJobSubmit,
     method: 'GET',
@@ -177,7 +177,7 @@ tape('projects - find jobs after first job was submitted', function (t) {
   })
 })
 
-tape('projects - webhook gitlab', function (t) {
+test('projects - webhook gitlab', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/gitlab',
     method: 'POST',
@@ -195,7 +195,7 @@ tape('projects - webhook gitlab', function (t) {
   })
 })
 
-tape('projects - webhook bitbucket', function (t) {
+test('projects - webhook bitbucket', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/bitbucket',
     method: 'POST',
@@ -213,7 +213,7 @@ tape('projects - webhook bitbucket', function (t) {
   })
 })
 
-tape('projects - webhook rest', function (t) {
+test('projects - webhook rest', function (t) {
   var options = {
     url: apiPrefix + 'projects/' + createdProjectId + '/webhooks/rest',
     method: 'POST',
@@ -231,7 +231,7 @@ tape('projects - webhook rest', function (t) {
   })
 })
 
-tape('projects - environments - list', function (t) {
+test('projects - environments - list', function (t) {
   var options = {
     url: `${apiPrefix}projects/${createdProjectId}/environments`,
     method: 'GET',

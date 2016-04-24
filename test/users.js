@@ -6,7 +6,7 @@ require('babel/register')({
 })
 
 var server = require('../index')
-var tape = require('./helpers/persistence')
+var test = require('./helpers/persistence')
 var config = require('config')
 
 var apiPrefix = config.apiPrefix
@@ -17,7 +17,7 @@ var basicHeader = function (username, password) {
 
 var token = null
 
-tape('user - list before login', function (t) {
+test('user - list before login', function (t) {
   var options = {
     url: apiPrefix + 'users',
     method: 'GET'
@@ -29,7 +29,7 @@ tape('user - list before login', function (t) {
   })
 })
 
-tape('user - login', function (t) {
+test('user - login', function (t) {
   var options = {
     url: apiPrefix + 'users/login',
     method: 'GET',
@@ -46,7 +46,7 @@ tape('user - login', function (t) {
   })
 })
 
-tape('user - list after login', function (t) {
+test('user - list after login', function (t) {
   var options = {
     url: apiPrefix + 'users',
     method: 'GET',
