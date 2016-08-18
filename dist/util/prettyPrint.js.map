@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../lib/util/prettyPrint.js"],"names":[],"mappings":";;AAAA,IAAI,aAAa,UAAU,IAAV,EAAgB;AAC/B,SAAO,KAAK,SAAL,CAAe,IAAf,EAAqB,IAArB,EAA2B,CAA3B,CAAP;AACD,CAFD;;AAIA,OAAO,OAAP,GAAiB,UAAjB","file":"prettyPrint.js","sourcesContent":["var prettyJson = function (json) {\n  return JSON.stringify(json, null, 2)\n}\n\nmodule.exports = prettyJson\n"]}
