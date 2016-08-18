@@ -6,7 +6,7 @@ Strider Core - API connecting projects and drones for continuous integration/dep
 [![Code Climate](https://codeclimate.com/github/Strider-CD/core/badges/gpa.svg)](https://codeclimate.com/github/Strider-CD/core)
 [![Test Coverage](https://codeclimate.com/github/Strider-CD/core/badges/coverage.svg)](https://codeclimate.com/github/Strider-CD/core/coverage)
 
-Requires Node 4.2.3 or greater.
+Requires Node 6 or greater.
 
 ## Related Modules
 
