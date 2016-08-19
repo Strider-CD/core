@@ -15,6 +15,10 @@ var _hapiDecorators = require('hapi-decorators');
 
 var _hapiDecorators2 = _interopRequireDefault(_hapiDecorators);
 
+var _bluebird = require('bluebird');
+
+var _bluebird2 = _interopRequireDefault(_bluebird);
+
 var _drone = require('../models/drone');
 
 var _drone2 = _interopRequireDefault(_drone);
@@ -60,6 +64,8 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
+const JWT = _bluebird2.default.promisifyAll(_jsonwebtoken2.default);
+
 let Drones = (_dec = _hapiDecorators2.default.controller(`${ _config2.default.apiPrefix }drones`), _dec2 = _hapiDecorators2.default.get('/'), _dec3 = _hapiDecorators2.default.post('/'), _dec4 = _hapiDecorators2.default.get('/{id}'), _dec5 = _hapiDecorators2.default.get('/session/refresh'), _dec6 = _hapiDecorators2.default.post('/checkin/{token}'), _dec(_class = (_class2 = class Drones {
   all(request, reply) {
     return _asyncToGenerator(function* () {
@@ -95,7 +101,7 @@ let Drones = (_dec = _hapiDecorators2.default.controller(`${ _config2.default.ap
 
       let drone = list[0];
       let session = generateSession(id);
-      let token = _jsonwebtoken2.default.sign(session, _config2.default.jwtSecret);
+      let token = yield JWT.sign(session, _config2.default.jwtSecret);
 
       drone.session = session;
       drone.token = token;
@@ -129,7 +135,7 @@ let Drones = (_dec = _hapiDecorators2.default.controller(`${ _config2.default.ap
 
       let drone = list[0];
       let session = generateSession(id);
-      let token = _jsonwebtoken2.default.sign(session, _config2.default.jwtSecret);
+      let token = yield JWT.sign(session, _config2.default.jwtSecret);
 
       drone.session = session;
 
@@ -140,23 +146,24 @@ let Drones = (_dec = _hapiDecorators2.default.controller(`${ _config2.default.ap
   }
 
   checkIn(request, reply) {
-    var token = request.params.token;
+    return _asyncToGenerator(function* () {
+      var token = request.params.token;
 
-    if (token) {
-      _jsonwebtoken2.default.verify(token, _config2.default.jwtSecret, function (err, decoded) {
-        if (err) {
+      if (token) {
+        let decoded;
+
+        try {
+          decoded = yield JWT.verify(token, _config2.default.jwtSecret);
+        } catch (err) {
           return reply(err).code(401);
         }
 
-        _drone2.default.update(decoded.parent, { status: 'active' }).then(id => {
-          reply();
-        }).catch(error => {
-          reply(error).code(500);
-        });
-      });
-    } else {
-      reply('missing token').code(400);
-    }
+        yield _drone2.default.update(decoded.parent, { status: 'active' });
+        reply();
+      } else {
+        reply('missing token').code(400);
+      }
+    })();
   }
 }, (_applyDecoratedDescriptor(_class2.prototype, 'all', [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, 'all'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'create', [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, 'create'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'single', [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, 'single'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'login', [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, 'login'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'checkIn', [_dec6], Object.getOwnPropertyDescriptor(_class2.prototype, 'checkIn'), _class2.prototype)), _class2)) || _class);
 exports.default = Drones;
