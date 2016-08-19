@@ -1,9 +1,7 @@
 'use strict'
 // post on testing hapi https://medium.com/the-spumko-suite/testing-hapi-services-with-lab-96ac463c490a
 
-require('babel-register')()
-
-var server = require('../index')
+var server = require('../lib/index')
 var Job = require('../lib/models/job')
 var Project = require('../lib/models/project')
 var v = require('validator')
