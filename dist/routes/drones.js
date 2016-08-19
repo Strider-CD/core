@@ -1,6 +1,35 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
 var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _class, _desc, _value, _class2;
+
+var _config = require('config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _hapiDecorators = require('hapi-decorators');
+
+var _hapiDecorators2 = _interopRequireDefault(_hapiDecorators);
+
+var _drone = require('../models/drone');
+
+var _drone2 = _interopRequireDefault(_drone);
+
+var _nodeUuid = require('node-uuid');
+
+var _nodeUuid2 = _interopRequireDefault(_nodeUuid);
+
+var _jsonwebtoken = require('jsonwebtoken');
+
+var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
 
 function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
   var desc = {};
@@ -31,24 +60,22 @@ function _applyDecoratedDescriptor(target, property, decorators, descriptor, con
   return desc;
 }
 
-var config = require('config');
-var web = require('hapi-decorators');
-var Drone = require('../models/drone');
-var uuid = require('node-uuid');
-var JWT = require('jsonwebtoken');
-var dronePath = config.apiPrefix + 'drones';
-
-let Drones = (_dec = web.controller(dronePath), _dec2 = web.get('/'), _dec3 = web.post('/'), _dec4 = web.get('/{id}'), _dec5 = web.get('/session/refresh'), _dec6 = web.post('/checkin/{token}'), _dec(_class = (_class2 = class Drones {
+let Drones = (_dec = _hapiDecorators2.default.controller(`${ _config2.default.apiPrefix }drones`), _dec2 = _hapiDecorators2.default.get('/'), _dec3 = _hapiDecorators2.default.post('/'), _dec4 = _hapiDecorators2.default.get('/{id}'), _dec5 = _hapiDecorators2.default.get('/session/refresh'), _dec6 = _hapiDecorators2.default.post('/checkin/{token}'), _dec(_class = (_class2 = class Drones {
   all(request, reply) {
-    Drone.findByQuery({}).then(function (list) {
-      var returnList = clone(list);
-      returnList.slice().map(item => {
-        if (item.session) delete item.session; // filter out session before replying
-      });
-      reply(returnList);
-    }).catch(function (err) {
-      reply(err).code(503);
-    });
+    return _asyncToGenerator(function* () {
+      try {
+        let list = yield _drone2.default.findByQuery({});
+        let returnList = clone(list);
+
+        returnList.slice().map(function (item) {
+          if (item.session) delete item.session; // filter out session before replying
+        });
+
+        reply(returnList);
+      } catch (err) {
+        reply(err).code(503);
+      }
+    })();
   }
 
   /*
@@ -56,27 +83,26 @@ let Drones = (_dec = web.controller(dronePath), _dec2 = web.get('/'), _dec3 = we
    */
 
   create(request, reply) {
-    var drone = request.payload;
-    if (!drone.name) return reply('malformed request').code(400);
+    return _asyncToGenerator(function* () {
+      let payload = request.payload;
 
-    Drone.save(drone).then(function (id) {
-      Drone.findByQuery({ 'id': id }).then(function (list) {
-        if (!list.length) return reply('').code(503);
+      if (!payload.name) return reply('malformed request').code(400);
 
-        let drone = list[0];
-        drone.session = generateSession(id);
-        let token = JWT.sign(drone.session, config.jwtSecret);
-        drone.token = token;
+      let id = yield _drone2.default.save(payload);
+      let list = yield _drone2.default.findByQuery({ 'id': id });
 
-        Drone.update(drone.id, drone).then(function (id) {
-          reply(drone);
-        }).then(null, function (err) {
-          reply(err).code(503);
-        });
-      }).then(null, function (error) {
-        reply(error).code(503);
-      });
-    });
+      if (!list.length) return reply('').code(503);
+
+      let drone = list[0];
+      let session = generateSession(id);
+      let token = _jsonwebtoken2.default.sign(session, _config2.default.jwtSecret);
+
+      drone.session = session;
+      drone.token = token;
+
+      yield _drone2.default.update(drone.id, drone);
+      reply(drone);
+    })();
   }
 
   /*
@@ -84,9 +110,10 @@ let Drones = (_dec = web.controller(dronePath), _dec2 = web.get('/'), _dec3 = we
    */
 
   single(request, reply) {
-    Drone.findOneById(request.params.id).then(drone => {
+    return _asyncToGenerator(function* () {
+      let drone = yield _drone2.default.findOneById(request.params.id);
       reply(drone);
-    }).catch(error => reply(error.message).code(error.code || 500));
+    })();
   }
 
   /*
@@ -94,34 +121,34 @@ let Drones = (_dec = web.controller(dronePath), _dec2 = web.get('/'), _dec3 = we
    */
 
   login(request, reply) {
-    let id = request.auth.credentials.parent;
-    Drone.findByQuery({ 'id': id }).then(function (list) {
+    return _asyncToGenerator(function* () {
+      let id = request.auth.credentials.parent;
+      let list = yield _drone2.default.findByQuery({ 'id': id });
+
       if (!list.length) return reply('').code(503);
 
       let drone = list[0];
-      drone.session = generateSession(id);
-      let token = JWT.sign(drone.session, config.jwtSecret);
+      let session = generateSession(id);
+      let token = _jsonwebtoken2.default.sign(session, _config2.default.jwtSecret);
 
-      Drone.update(drone.id, drone).then(function (id) {
-        reply({ text: 'Check auth headers for your token' }).header('Authorization', token);
-      }).then(null, function (err) {
-        reply(err).code(404);
-      });
-    }).then(null, function (err) {
-      reply(err).code(503);
-    });
+      drone.session = session;
+
+      yield _drone2.default.update(drone.id, drone);
+
+      reply({ text: 'Check auth headers for your token' }).header('Authorization', token);
+    })();
   }
 
   checkIn(request, reply) {
     var token = request.params.token;
 
     if (token) {
-      JWT.verify(token, config.jwtSecret, function (err, decoded) {
+      _jsonwebtoken2.default.verify(token, _config2.default.jwtSecret, function (err, decoded) {
         if (err) {
           return reply(err).code(401);
         }
 
-        Drone.update(decoded.parent, { status: 'active' }).then(id => {
+        _drone2.default.update(decoded.parent, { status: 'active' }).then(id => {
           reply();
         }).catch(error => {
           reply(error).code(500);
@@ -132,12 +159,13 @@ let Drones = (_dec = web.controller(dronePath), _dec2 = web.get('/'), _dec3 = we
     }
   }
 }, (_applyDecoratedDescriptor(_class2.prototype, 'all', [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, 'all'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'create', [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, 'create'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'single', [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, 'single'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'login', [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, 'login'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'checkIn', [_dec6], Object.getOwnPropertyDescriptor(_class2.prototype, 'checkIn'), _class2.prototype)), _class2)) || _class);
+exports.default = Drones;
 
 
 function generateSession(id) {
   return {
     parent: id,
-    id: uuid.v1(),
+    id: _nodeUuid2.default.v1(),
     type: 'drone',
     valid: true,
     exp: new Date().getTime() + 5 * 365 * 24 * 60 * 60 * 1000 // expires in 5 years
@@ -147,6 +175,4 @@ function generateSession(id) {
 function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
-
-module.exports = Drones;
 //# sourceMappingURL=drones.js.map

@@ -12,6 +12,10 @@ var _hapiAuthJwt = require('hapi-auth-jwt2');
 
 var _hapiAuthJwt2 = _interopRequireDefault(_hapiAuthJwt);
 
+var _hapiAsyncHandler = require('hapi-async-handler');
+
+var _hapiAsyncHandler2 = _interopRequireDefault(_hapiAsyncHandler);
+
 var _good = require('good');
 
 var _good2 = _interopRequireDefault(_good);
@@ -82,7 +86,7 @@ server.primus = primus;
 var emitter = new _eventemitter2.default();
 (0, _eventHandlers2.default)(emitter, primus);
 
-var hapiPlugins = [_hapiAuthBasic2.default, _hapiAuthJwt2.default, {
+var hapiPlugins = [_hapiAuthBasic2.default, _hapiAuthJwt2.default, _hapiAsyncHandler2.default, {
   register: _good2.default,
   options: {
     reporters: [{

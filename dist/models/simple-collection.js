@@ -16,7 +16,7 @@ let SimpleCollection = class SimpleCollection {
   }
 
   save(item) {
-    if (!v.isUUID(item.id)) {
+    if (!item.id || !v.isUUID(item.id)) {
       item.id = uuid.v1(); // date time based ids
     }
 
