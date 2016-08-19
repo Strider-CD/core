@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "lint": "snazzy index.js lib/**/*.js",
+    "lint": "snazzy lib/**/*.js",
     "pretest": "npm run lint",
     "test": "tape test/ | tap-spec",
+    "test:lint": "snazzy test/**/*.js",
     "test-coverage": "babel-istanbul cover test/ --report lcovonly | tap-spec",
     "send-coverage": "codeclimate-test-reporter < coverage/lcov.info",
     "posttest-coverage": "npm run lint",

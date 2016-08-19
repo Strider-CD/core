@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 var config = require('config')
-
 var test = null
+
 if (config.dbType === 'mongodb') {
   require('deasync').loopWhile(function () {
     return !global.striderReady
@@ -12,7 +12,8 @@ if (config.dbType === 'mongodb') {
   })
 
   var redtape = require('redtape')
-  test = redtest({
+
+  test = redtape({
     beforeEach: function (cb) {
       mongoose.connect(config.mongoDbURI)
       require('deasync').loopWhile(function () {
