@@ -101,24 +101,6 @@ test('drones - list after register using drone Token', function (t) {
   })
 })
 
-test('drones - list after register using drone Token', function (t) {
-  var options = {
-    url: apiPrefix + 'drones',
-    method: 'GET',
-    headers: {
-      authorization: droneToken
-    }
-  }
-
-  server.inject(options, function (res) {
-    var data = res.result
-    t.equal(res.statusCode, 200)
-    t.ok(data && Array.isArray(data), 'Data is array')
-    t.ok(data.length > 0, 'Data has results')
-    server.stop(t.end)
-  })
-})
-
 test('drones - create a project in order to inject a job', function (t) {
   var options = {
     url: apiPrefix + 'projects',
