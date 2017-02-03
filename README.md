@@ -1,5 +1,7 @@
 # core
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Strider-CD/core.svg)](https://greenkeeper.io/)
+
 Strider Core - API connecting projects and drones for continuous integration/deployment
 
 [![Build Status](https://travis-ci.org/Strider-CD/core.svg)](https://travis-ci.org/Strider-CD/core)
