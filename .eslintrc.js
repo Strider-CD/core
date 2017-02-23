@@ -8,6 +8,6 @@ module.exports = {
   },
 
   rules: {
-    'eol-last': false
+    'eol-last': ['error', 'never']
   }
 }
